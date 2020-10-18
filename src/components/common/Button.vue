@@ -1,15 +1,18 @@
 <template>
-  <el-button type="primary">啦啦啦</el-button>
+  <el-button type="primary" size="mini">{{ text }}</el-button>
 </template>
 <script>
 export default {
+  props: {
+    text: String
+  },
   components: {},
   computed: {},
-  data() {
+  data () {
     return {};
   },
-  created() {},
-  mounted() {},
+  created () { },
+  mounted () { },
   methods: {}
 }
 </script>

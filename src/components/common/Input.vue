@@ -1,5 +1,5 @@
 <template>
-  <el-input placeholder></el-input>
+  <el-input  size="mini" placeholder="请输入"></el-input>
 </template>
 <script>
 export default {

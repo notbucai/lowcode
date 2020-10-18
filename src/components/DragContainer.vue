@@ -1,23 +1,26 @@
 <template>
-  <component
-    :is="'bc-'+element"
-    v-bind="props"
-    class="drag-container"
-    draggable="true"
-    @dragstart.native.stop="handleDragStart"
-    @dragenter.native.stop.prevent="handleDragEnter"
-    @dragend.native="handleDragEnd"
+  <draggable
+    :list="children"
+    :group="type"
+    :class="dragClassName"
+    @click.native.stop.prevent="handleClickItem"
   >
-    <drag-container v-for="(item) in children" :key="item.id" v-bind="item" />
-  </component>
+    <component
+      :is="'bc-' + item.element"
+      v-for="item in children"
+      :key="item.id"
+      v-bind="item.props"
+    >
+      <drag-container v-bind="item" />
+    </component>
+  </draggable>
 </template>
 <script lang='ts'>
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { bus } from './model/dragBus';
 
 @Component({
   components: {
-  }
+  },
 })
 export default class DragLayout extends Vue {
   @Prop({
@@ -42,25 +45,32 @@ export default class DragLayout extends Vue {
   })
   children!: any[];
 
-  handleDragStart (e) {
-    console.log(e);
-    bus.$emit('start', this.id);
+  active: boolean = false;
+
+  get dragClassName () {
+    const list = ['drag-' + this.type];
+    if (this.active) {
+      list.push('active');
+    }
+    return list.join(' ');
   }
-  handleDragEnter (e) {
-    console.log(e);
-    bus.$emit('change', this.id);
+
+  handleClickItem () {
+    this.active = !this.active;
   }
-  handleDragEnd (e) {
-    console.log(e);
-    bus.$emit('end', this.id);
-  }
+
 }
 
 </script>
 <style lang="scss" scoped>
 .drag-container {
-  /* border: 1px solid #ccc; */
-  /* padding: 10px; */
-  /* margin: 10px; */
+  min-height: 30px;
+  overflow: hidden;
+  position: relative;
+
+  border: 1px solid transparent;
+  border-color: rgb(87, 166, 255);
+  &:hover {
+  }
 }
 </style>

@@ -8,7 +8,22 @@
         </div>
       </el-header>
       <el-container>
-        <el-aside width="200px">Aside</el-aside>
+        <el-aside width="200px">
+          <draggable
+            :list="elementList"
+            :group="{ name: 'container', pull: 'clone', put: false }"
+            :clone="handleClone"
+          >
+            <component
+              :is="'bc-' + item.element"
+              size="mini"
+              v-for="item in elementList"
+              :key="item.element"
+              v-bind="item.props"
+              >{{ item.name }}</component
+            >
+          </draggable>
+        </el-aside>
         <el-main>
           <div class="layout-main">
             <drag-layout :elements.sync="elements" />
@@ -31,6 +46,21 @@ import { Component, Vue } from 'vue-property-decorator';
 export default class App extends Vue {
   isMove: boolean = false;
   currentId: string | number | null = null;
+  elementList = [
+    {
+      "element": "input",
+      "type": "element",
+      "name": "输入框组件"
+    },
+    {
+      "element": "button",
+      "type": "element",
+      "name": "按钮组件",
+      "props": {
+        "text": '按钮名称'
+      }, // 参数
+    },
+  ];
   elements = {
     "id": "c6174605-fb74-4fcb-884e-1a52926d55f3",
     "element": "layout", // 元素名称 or 类型
@@ -60,7 +90,9 @@ export default class App extends Vue {
                 "id": "6b49f4c3-8537-4bd4-b666-69d962c12081",
                 "element": "button", // 元素名称 or 类型
                 "type": "element", // container or element
-                "props": {}, // 参数
+                "props": {
+                  "text": '按钮1'
+                }, // 参数
               },
             ]
           },
@@ -87,34 +119,11 @@ export default class App extends Vue {
       }
     ]
   }
-  handleDragStart (e, item) {
-    if (this.isMove) return;
-    this.isMove = true;
-    this.currentId = item.id;
-    console.log(e);
-  }
-  handleDragEnter (e, item) {
-    console.log(e, item);
-    // if (this.currentId == item.id) return;
-
-    // const currentDragIndex = this.list.findIndex(_item => _item.id == this.currentId);
-    // if (currentDragIndex < 0) return;
-
-    // const currentEnterDragIndex = this.list.findIndex(_item => _item.id == item.id);
-    // if (currentEnterDragIndex < 0) return;
-
-    // const temp = this.list[currentDragIndex];
-
-    // this.list[currentDragIndex] = this.list[currentEnterDragIndex];
-    // this.list[currentEnterDragIndex] = temp;
-
-    // this.list = [...this.list];
-  }
-  handleDragEnd (e) {
-    console.log(e);
-    this.currentId = null;
-    this.isMove = false;
-
+  handleClone (item = {}) {
+    return {
+      "id": (Math.random() * 10000000 | 0).toString(),
+      ...item
+    }
   }
 }
 </script>
