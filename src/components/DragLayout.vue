@@ -1,6 +1,6 @@
 <template>
   <div class="drag-layout">
-    <drag-container v-bind="elements" />
+    <drag-container v-bind="elements" style="min-height:600px"/>
   </div>
 </template>
 <script lang='ts'>

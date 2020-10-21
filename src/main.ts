@@ -6,9 +6,11 @@ import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(ElementUI);
 Vue.component('draggable', vuedraggable);
 import './components';
+import store from './store'
 
 Vue.config.productionTip = process.env.NODE_ENV !== 'production';
 
 new Vue({
-  render: h => h(App),
+  store,
+  render: h => h(App)
 }).$mount('#app')
