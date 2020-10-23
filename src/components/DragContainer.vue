@@ -3,16 +3,20 @@
     :list="children"
     :group="group"
     :class="dragClassName"
-    @click.native.stop.prevent="handleClickItem"
     :move="checkMove"
     :clone="handleClone"
     :data-tag="element"
   >
     <component
-      :is="'bc-' + item.element"
       v-for="item in children"
       :key="item.id"
+
       v-bind="item.props"
+
+      :is="'bc-' + item.element"
+      :data-tag="item.element"
+      
+      @click.native.stop.prevent="handleClickItem(item)"
     >
       <drag-container v-bind="item" />
     </component>
@@ -23,6 +27,7 @@ import { Component, Prop, Vue, Inject } from 'vue-property-decorator';
 import { State } from 'vuex-class'
 
 import mixins from '@/mixins';
+import { LowElement } from '@/types/Element';
 @Component({
   components: {
   },
@@ -30,8 +35,8 @@ import mixins from '@/mixins';
 })
 export default class DragLayout extends Vue {
 
-  @State('current')
-  current: any;
+  @State('currentId')
+  current?: string;
 
   @Prop({
     type: String
@@ -68,7 +73,7 @@ export default class DragLayout extends Vue {
 
   get dragClassName () {
     const list = ['drag-wrapper', 'drag-' + this.type];
-    if (!this.draggableOptions.clone && this.current && this.current.id === this.id) {
+    if (!this.draggableOptions.clone && this.current === this.id) {
       list.push('low-active');
     }
     return list.join(' ');
@@ -91,16 +96,17 @@ export default class DragLayout extends Vue {
       ...item,
       children: item.type == 'container' ? JSON.parse(JSON.stringify(item.children || [])) : undefined
     };
+
     cItem.clone = undefined;
     return cItem;
   }
 
-  handleClickItem () {
+  handleClickItem (element: LowElement) {
     // this.active = !this.active;
     // 推送id
-    this.$store.commit('SET_CURRENT', {
-      ...this.$props
-    });
+    if (!this.draggableOptions.clone) {
+      this.$store.commit('SET_CURRENT', element.id);
+    }
   }
 
 }
@@ -111,6 +117,7 @@ export default class DragLayout extends Vue {
   border-style: solid !important;
 }
 .drag-wrapper {
+  position: relative;
   &::before {
     position: absolute;
     content: attr(data-tag);
@@ -123,7 +130,6 @@ export default class DragLayout extends Vue {
 }
 .drag-container {
   min-height: 30px;
-  position: relative;
   padding: 5px;
   border: 1px dashed;
   border-color: #cde9ff;

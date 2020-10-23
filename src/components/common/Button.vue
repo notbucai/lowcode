@@ -1,11 +1,9 @@
 <template>
-  <el-button type="primary" size="mini">{{ text }}</el-button>
+  <el-button v-bind="$props">{{ text }}</el-button>
 </template>
 <script>
 export default {
-  props: {
-    text: String
-  },
+  props: ['text', 'size', 'type', 'plain', 'round', 'circle', 'disabled', 'icon', 'autofocus', 'native-type', 'loading'],
   components: {},
   computed: {},
   data () {

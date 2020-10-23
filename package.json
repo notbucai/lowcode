@@ -2,6 +2,7 @@
   "name": "lowcode",
   "version": "0.1.0",
   "private": true,
+  "types": "./types",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -48,7 +49,9 @@
     "parserOptions": {
       "parser": "@typescript-eslint/parser"
     },
-    "rules": {}
+    "rules": {
+      "no-unused-vars": "off"
+    }
   },
   "browserslist": [
     "> 1%",

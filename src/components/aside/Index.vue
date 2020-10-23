@@ -13,18 +13,28 @@
       </el-collapse-item>
     </el-collapse>
     <!-- 配置页 -->
+    <div v-if="current">
+      <component
+        :is="'bc-' + current.element + '-option'"
+        :element="current"
+      ></component>
+    </div>
   </div>
 </template>
 <script lang='ts'>
 import { Component, Vue, Provide } from 'vue-property-decorator';
-import { State } from 'vuex-class';
+import { Getter, State } from 'vuex-class';
+import { LowElement } from '@/types/Element';
 @Component({
   name: 'low-aside',
 })
 export default class LowAside extends Vue {
 
-  @State('current')
-  current: any;
+  @State('currentId')
+  currentId?: string;
+
+  @Getter('current')
+  current?: LowElement;
 
   @Provide('draggableOptions')
   draggableOptions = {

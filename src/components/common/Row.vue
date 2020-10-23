@@ -1,10 +1,16 @@
 <template>
-  <el-row>
+  <el-row v-bind="$props">
     <slot></slot>
   </el-row>
 </template>
 <script>
 export default {
+  props: {
+    gutter: Number,
+    type: String,
+    justify: String,
+    align: String,
+  },
   components: {},
   computed: {},
   data () {
