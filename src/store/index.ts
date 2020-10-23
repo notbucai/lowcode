@@ -44,12 +44,14 @@ export default new Vuex.Store<StateType>({
         current = current as LowElement;
         parent = parent as LowElement;
         // index = index as number;
+        
         current.props = payload;
-        const id = current.id;
-        if (parent && Array.isArray(parent.children)) {
-          index = parent.children.findIndex(item => item.id === id)
-          parent.children.splice(index, 1, current);
-        }
+        // const id = current.id;
+        // TODO: 这里有问题
+        // if (parent && Array.isArray(parent.children)) {
+        //   // index = parent.children.findIndex(item => item.id === id)
+        //   // parent.children.splice(index, 1, current);
+        // }
       }
     },
     REMOVE_CURRENT (state) {
