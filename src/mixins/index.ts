@@ -9,8 +9,9 @@ type MoveEventType = {
 const putRules: any = {
   'row': {
     allow: ['col'],  // 二选一 ？
-    notallow: []  // 二选一 ？
+    notallow: [],  // 二选一 ？
   },
+
   // 'col': {
   //   allow: [],  // 二选一 ？
   //   notallow: ['row']  // 二选一 ？
@@ -18,20 +19,30 @@ const putRules: any = {
 };
 // 可归属 or 不可归属
 const pullRules: any = {
+  'form-item': {
+    // 父元素
+    allow: [],
+    notallow: [],
+    // 爷父 元素
+    parent: ['form'],
+  },
   'col': {
+    // 子元素
     allow: ['row'],
     notallow: []
   },
 };
 /**
- * 验证元素的拖动状态
+ * 验证元素的拖动状态 
  * @param to 要拖动到的容器标签
  * @param from 来源的元素标签
  */
-function hasElementDragState (to: string, from: string) {
-  const putHas = [true, false];
-  const pullHas = [true, false];
+function hasElementDragState (to: string, from: string, toPath: string, fromPath: string) {
 
+  const putHas = [true, false, true];
+  const pullHas = [true, false, true];
+
+  // TODO: 这里代码需要重写一下了，逻辑混乱
   const putNode = putRules[to];
   const pullNode = pullRules[from];
 
@@ -43,9 +54,20 @@ function hasElementDragState (to: string, from: string) {
   if (pullNode) {
     pullHas[0] = pullNode.allow.length ? pullNode.allow.includes(to) : true;
     pullHas[1] = pullNode.notallow.length ? pullNode.notallow.includes(to) : false;
+
+    if (Array.isArray(pullNode.parent) && pullNode.parent.length > 0) {
+      const toPathArr = toPath.split('_');
+      const list = pullNode.parent.filter((item: string) => {
+        return toPathArr.includes(item);
+      });
+
+      pullHas[2] = list.length === pullNode.parent.length;
+
+    }
+
   }
 
-  return putHas[0] && pullHas[0] && !putHas[1] && !pullHas[1];
+  return putHas[0] && pullHas[0] && !putHas[1] && !pullHas[1] && pullHas[2] && putHas[2];
 }
 
 
@@ -68,32 +90,11 @@ export default {
       // 验证元素是否可以拖动到当前元素
       const toTag = to.dataset.tag || '';
       const fromTag = dragged.dataset.tag || '';
+      const toPath = to.dataset.path || '';
+      const fromPath = dragged.dataset.path || '';
 
-      const has = hasElementDragState(toTag, fromTag);
+      const has = hasElementDragState(toTag, fromTag, toPath, fromPath);
       return has;
-      // TODO: 下方忽略 有问题
-      // 检测
-      // const rules: any = {
-      //   'row': {
-      //     allow: ['col'],
-      //     notallow: false
-      //   },
-      // };
-      // const rule: any = rules[toElement];
-      // if (!rule) return true;
-
-      // const { allow, notallow }: { allow: string[], notallow: string[] } = rule;
-
-      // const hasAllow = allow.includes(fromElement);
-      // let hasNotallow = true;
-      // if (notallow) {
-      //   hasNotallow = notallow.includes(fromElement);
-      // }
-
-      // console.log('hasAllow', hasAllow);
-      // console.log('hasNotallow', hasNotallow);
-
-      // return hasAllow || !hasNotallow;
     }
   },
 }
