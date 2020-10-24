@@ -4,14 +4,6 @@
 <script>
 export default {
   props: ['text', 'size', 'type', 'plain', 'round', 'circle', 'disabled', 'icon', 'autofocus', 'native-type', 'loading'],
-  components: {},
-  computed: {},
-  data () {
-    return {};
-  },
-  created () { },
-  mounted () { },
-  methods: {}
 }
 </script>
 <style lang="scss" scoped>

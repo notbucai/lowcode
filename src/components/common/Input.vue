@@ -1,16 +1,11 @@
 <template>
-  <el-input  size="mini" placeholder="请输入"></el-input>
+  <el-input v-bind="$props"></el-input>
 </template>
 <script>
 export default {
-  components: {},
-  computed: {},
-  data () {
-    return {};
-  },
-  created () { },
-  mounted () { },
-  methods: {}
+  props: ["size", "type", "disabled", "autofocus", "maxlength", "minlength", "showWordLimit", "placeholder", "clearable", "showPassword", "prefixIcon", "suffixIcon", "rows", "readonly", "tabindex"],
+  updated () {
+  }
 }
 </script>
 <style lang="scss" scoped>

@@ -58,6 +58,7 @@ export default class LowAside extends Vue {
           "type": "element",
           "name": "输入框组件",
           "clone": true,
+          "props": {}
         },
         {
           "element": "button",
