@@ -11,3 +11,7 @@ export type LowElement = {
   };
   children?: LowElement[];
 }
+
+export type LowDrapElement = LowElement & {
+  clone?: boolean;
+}

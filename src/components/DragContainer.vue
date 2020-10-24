@@ -5,20 +5,24 @@
     :class="dragClassName"
     :move="checkMove"
     :clone="handleClone"
+    :disabled="disabled"
+    :sort="sort"
     :data-tag="element"
+    :data-path="currentPath"
   >
     <component
       v-for="item in children"
       :key="item.id"
-
       v-bind="item.props"
-
       :is="'bc-' + item.element"
       :data-tag="item.element"
-      
       @click.native.stop.prevent="handleClickItem(item)"
     >
-      <drag-container v-bind="item" />
+      <drag-container
+        v-bind="item"
+        :path="currentPath"
+        :disabled="currentDisabled"
+      />
     </component>
   </draggable>
 </template>
@@ -27,7 +31,8 @@ import { Component, Prop, Vue, Inject } from 'vue-property-decorator';
 import { State } from 'vuex-class'
 
 import mixins from '@/mixins';
-import { LowElement } from '@/types/Element';
+import { LowDrapElement, LowElement } from '@/types/Element';
+import { generateUUID } from '@/utils';
 @Component({
   components: {
   },
@@ -37,6 +42,17 @@ export default class DragLayout extends Vue {
 
   @State('currentId')
   current?: string;
+
+  @Prop({
+    type: String,
+    default: ''
+  })
+  path?: string;
+
+  @Prop({
+    type: Boolean
+  })
+  disabled?: boolean;
 
   @Prop({
     type: String
@@ -68,8 +84,30 @@ export default class DragLayout extends Vue {
   // @Provide('draggableOptions')
   draggableOptions: any;
 
+  get currentDisabled () {
+    const draggableOptions = this.draggableOptions;
+    let res = draggableOptions && draggableOptions.clone;
 
-  active: boolean = false;
+    // if (!res && this.current) {
+    //   res = this.current !== this.id;
+    // }
+
+    return res;
+  }
+  get sort () {
+    const draggableOptions = this.draggableOptions;
+    let res = !draggableOptions || !draggableOptions.clone;
+    // 用于固定
+    if (res && this.current) {
+      res = this.current === this.id;
+    }
+    
+    return res;
+  }
+
+  get currentPath () {
+    return [this.path, this.element].filter(item => item).join('_');
+  }
 
   get dragClassName () {
     const list = ['drag-wrapper', 'drag-' + this.type];
@@ -86,19 +124,24 @@ export default class DragLayout extends Vue {
     }
     return group;
   }
+  handleCloneTree (oldElement: LowDrapElement) {
+    const element = Object.assign({}, oldElement);
+    delete element.clone;
 
+    element.id = generateUUID();
+    if (element.type === 'container') {
+      element.children = (element.children || []).map<LowDrapElement>((item: LowDrapElement) => {
+        return this.handleCloneTree(item);
+      });
+    }
+    return element;
+  }
   handleClone (item: any = {}) {
     if (!this.draggableOptions.group) {
       return item;
     }
-    const cItem = {
-      "id": (Math.random() * 10000000 | 0).toString(),
-      ...item,
-      children: item.type == 'container' ? JSON.parse(JSON.stringify(item.children || [])) : undefined
-    };
 
-    cItem.clone = undefined;
-    return cItem;
+    return this.handleCloneTree(item);
   }
 
   handleClickItem (element: LowElement) {
