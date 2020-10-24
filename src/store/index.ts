@@ -63,6 +63,7 @@ export default new Vuex.Store<StateType>({
         parent = parent as LowElement;
         // index = index as number;
         const id = current.id;
+        
         if (parent && Array.isArray(parent.children)) {
           index = parent.children.findIndex(item => item.id === id)
           parent.children.splice(index, 1);

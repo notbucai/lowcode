@@ -33,7 +33,7 @@ export function getFinderFunctionByChildKeyFromTree (tree: LowElement) {
     if (Array.isArray(item.children)) {
       for (let i = 0; i < item.children.length; i++) {
         const resData = findElementByIdFromTree(id, item.children[i]);
-        if (!current) {
+        if (!current && resData) {
           current = item;
           index = i;
         }
