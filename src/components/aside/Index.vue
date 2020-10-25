@@ -90,6 +90,32 @@ export default class LowAside extends Vue {
             span: 6
           }
         },
+        {
+          "element": "form", // 元素名称 or 类型
+          "type": "container", // container or element
+          "clone": true,
+          props: {
+            size: 'mini'
+          },
+          children: [
+            {
+              "element": "form-item", // 元素名称 or 类型
+              "type": "container", // container or element
+              props: {
+                label: "测试"
+              },
+              children: [
+                {
+                  "element": "input", // 元素名称 or 类型
+                  "type": "element", // container or element
+                  props: {
+                  },
+                },
+              ]
+            },
+          ]
+        },
+
       ]
     },
   ]
