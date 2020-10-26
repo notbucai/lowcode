@@ -168,6 +168,8 @@ export default class DragLayout extends Vue {
 <style lang="scss" scoped>
 .low-active {
   border-style: solid !important;
+  border-width: 2px !important;
+  border-color: #009688 !important;
 }
 .drag-wrapper {
   position: relative;
@@ -188,13 +190,15 @@ export default class DragLayout extends Vue {
   border-color: #cde9ff;
   margin: 5px;
   overflow: hidden;
+  transition: border 50ms;
+
   &.show {
     padding: 0;
     margin: 0;
     border: 0;
     overflow: visible;
     min-height: 0;
-    &::before{
+    &::before {
       display: none;
     }
   }
