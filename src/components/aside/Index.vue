@@ -69,6 +69,15 @@ export default class LowAside extends Vue {
             "text": '按钮名称'
           }, // 参数
         },
+        {
+          "element": "text",
+          "type": "element",
+          "name": "文字组件",
+          "clone": true,
+          "props": {
+            "text": '文字组件'
+          }, // 参数
+        },
       ]
     },
     {
