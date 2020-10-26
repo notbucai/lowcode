@@ -1,6 +1,6 @@
 <template>
   <div class="drag-layout">
-    <drag-container v-bind="elements" style="min-height:600px"/>
+    <drag-container v-bind="elements" style="min-height:600px" :show="show"/>
   </div>
 </template>
 <script lang='ts'>
@@ -17,6 +17,11 @@ export default class DragLayout extends Vue {
     type: Object
   })
   elements?: object;
+
+  @Prop({
+    type: Boolean
+  })
+  show?:boolean;
 
   created () {
   }

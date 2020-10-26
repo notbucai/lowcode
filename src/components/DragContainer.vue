@@ -21,6 +21,7 @@
       <drag-container
         v-bind="item"
         :path="currentPath"
+        :show="show"
         :disabled="currentDisabled"
       />
     </component>
@@ -42,6 +43,12 @@ export default class DragLayout extends Vue {
 
   @State('currentId')
   current?: string;
+
+  @Prop({
+    type: Boolean,
+    default: false
+  })
+  show?: boolean;
 
   @Prop({
     type: String,
@@ -101,7 +108,7 @@ export default class DragLayout extends Vue {
     if (res && this.current) {
       res = this.current === this.id;
     }
-    
+
     return res;
   }
 
@@ -113,6 +120,9 @@ export default class DragLayout extends Vue {
     const list = ['drag-wrapper', 'drag-' + this.type];
     if (!this.draggableOptions.clone && this.current === this.id) {
       list.push('low-active');
+    }
+    if (this.show) {
+      list.push('show')
     }
     return list.join(' ');
   }
@@ -178,5 +188,15 @@ export default class DragLayout extends Vue {
   border-color: #cde9ff;
   margin: 5px;
   overflow: hidden;
+  &.show {
+    padding: 0;
+    margin: 0;
+    border: 0;
+    overflow: visible;
+    min-height: 0;
+    &::before{
+      display: none;
+    }
+  }
 }
 </style>
