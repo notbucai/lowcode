@@ -1,8 +1,11 @@
 import { LowElement } from '@/types/Element'
+import { History } from 'stateshot'
 import { getFinderFunctionByChildKeyFromTree } from '@/utils'
 // import LowElement from '../types/Element'
 import Vue from 'vue'
 import Vuex from 'vuex'
+
+const history = new History();
 
 Vue.use(Vuex)
 
@@ -33,6 +36,19 @@ export default new Vuex.Store<StateType>({
     }
   },
   mutations: {
+    UPDATE (state) {
+      // 添加到历史
+      console.log('history',history.get());
+      history.pushSync(state.elements);
+      console.log('history',history.get());
+      
+    },
+    UNDO (state) {
+      state.elements = history.undo().get();
+    },
+    REDO (state) {
+      state.elements = history.redo().get();
+    },
     SET_CURRENT (state, payload: string) {
       state.currentId = payload;
     },
@@ -44,7 +60,7 @@ export default new Vuex.Store<StateType>({
         current = current as LowElement;
         parent = parent as LowElement;
         // index = index as number;
-        
+
         current.props = payload;
         // const id = current.id;
         // TODO: 这里有问题
@@ -63,7 +79,7 @@ export default new Vuex.Store<StateType>({
         parent = parent as LowElement;
         // index = index as number;
         const id = current.id;
-        
+
         if (parent && Array.isArray(parent.children)) {
           index = parent.children.findIndex(item => item.id === id)
           parent.children.splice(index, 1);

@@ -9,6 +9,7 @@
     :sort="sort"
     :data-tag="element"
     :data-path="currentPath"
+    @change="emitter"
   >
     <component
       v-for="item in children"
@@ -23,6 +24,7 @@
         :path="currentPath"
         :show="show"
         :disabled="currentDisabled"
+        @input="emitter"
       />
     </component>
   </draggable>
@@ -134,6 +136,11 @@ export default class DragLayout extends Vue {
     }
     return group;
   }
+
+  emitter (value: LowDrapElement) {
+    this.$emit("input", value);
+  }
+
   handleCloneTree (oldElement: LowDrapElement) {
     const element = Object.assign({}, oldElement);
     delete element.clone;

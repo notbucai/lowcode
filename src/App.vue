@@ -31,7 +31,7 @@
         </el-aside>
         <el-main>
           <div class="layout-main">
-            <drag-layout :elements.sync="elements" :show="show" />
+            <drag-layout v-model="elements" :show="show" />
           </div>
         </el-main>
       </el-container>
@@ -58,11 +58,12 @@ import DragLayout from './components/DragLayout.vue'
 import Aside from '@/components/aside/Index.vue';
 import prettier from 'prettier/standalone';
 import parserHtml from 'prettier/parser-html';
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Watch } from 'vue-property-decorator';
 import mixins from '@/mixins';
 import { State } from 'vuex-class';
 import { LowElement } from './types/Element';
 import Clipboard from 'v-clipboard'
+import tinykeys from 'tinykeys';
 
 Vue.use(Clipboard);
 
@@ -75,10 +76,37 @@ Vue.use(Clipboard);
 
 })
 export default class App extends Vue {
+
+  private created () {
+    this.$store.commit('UPDATE');
+    tinykeys(window, {
+      "$mod+z": () => {
+        this.$store.commit('UNDO');
+      },
+      "$mod+Shift+z": () => {
+        // 反撤回
+        this.$store.commit('REDO');
+      },
+    })
+  }
+
   isMove: boolean = false;
   currentId: string | number | null = null;
-  @State('elements')
-  elements: any;
+  // @State('elements')
+  // elements: any;
+
+  // @Watch('$store')
+  // elementsWatch(){
+  //   console.log(1);
+  // }
+
+  get elements () {
+    return this.$store.state.elements;
+  }
+  set elements (val) {
+    console.log(1);
+  }
+
 
   show: boolean = false;
 
