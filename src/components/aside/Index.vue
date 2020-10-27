@@ -124,6 +124,34 @@ export default class LowAside extends Vue {
             },
           ]
         },
+        {
+          "element": "table", // 元素名称 or 类型
+          "type": "container", // container or element
+          "clone": true,
+          props: {
+            columns: [
+              {
+                id: "id",
+                label: "编号"
+              },
+              {
+                id: "name",
+                label: "名称"
+              }
+            ]
+          },
+          children: [
+            {
+              "element": "button", // 元素名称 or 类型
+              "type": "element", // container or element
+              props: {
+                type: "text",
+                size: 'mini',
+                text: '查看'
+              },
+            },
+          ]
+        },
 
       ]
     },
