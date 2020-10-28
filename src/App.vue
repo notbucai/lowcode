@@ -87,6 +87,12 @@ export default class App extends Vue {
         // 反撤回
         this.$store.commit('REDO');
       },
+      "$mod+d": event => {
+        event.preventDefault()
+        if (typeof this.$store.state.currentId === 'undefined') return;
+        this.$store.commit("REMOVE_CURRENT");
+        this.$store.commit("SET_CURRENT", undefined);
+      }
     })
   }
 
