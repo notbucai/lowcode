@@ -97,6 +97,66 @@ export default class LowAside extends Vue {
             },
           ]
         },
+        {
+          element: 'block',
+          type: 'contailner',
+          children: [
+            {
+              "element": "tag",
+              "type": "element",
+              "name": "标签",
+              "clone": true,
+              "props": {
+                "text": '标签一'
+              }, // 参数
+            },
+          ]
+        },
+        {
+          element: 'block',
+          type: 'contailner',
+          children: [
+            {
+              "element": "progress",
+              "type": "element",
+              "name": "进度条",
+              "clone": true,
+              "props": {
+                percentage: 43
+              }, // 参数
+            },
+          ]
+        },
+        {
+          element: 'block',
+          type: 'contailner',
+          children: [
+            {
+              "element": "pagination",
+              "type": "element",
+              "name": "分页",
+              "clone": true,
+              "props": {
+                total: 100
+              }, // 参数
+            },
+          ]
+        },
+        {
+          element: 'block',
+          type: 'contailner',
+          children: [
+            {
+              "element": "alert",
+              "type": "element",
+              "name": "警告",
+              "clone": true,
+              "props": {
+                title: "提示的文案"
+              }, // 参数
+            },
+          ]
+        },
       ]
     },
     {
@@ -174,7 +234,7 @@ export default class LowAside extends Vue {
                   "type": "container", // container or element
                   disabled: true,
                   props: {
-                    label: "标签"
+                    label: "表单项"
                   },
                   children: [
                     {
@@ -191,7 +251,7 @@ export default class LowAside extends Vue {
                   "type": "container", // container or element
                   disabled: true,
                   props: {
-                    label: "标签"
+                    label: "表单项"
                   },
                   children: [
                     {
@@ -207,9 +267,7 @@ export default class LowAside extends Vue {
             },
           ]
         },
-
         {
-
           element: 'block',
           type: 'contailner',
           children: [
@@ -248,6 +306,137 @@ export default class LowAside extends Vue {
 
       ]
     },
+    {
+      type: 'layout',
+      element: 'layout',
+      label: "表单",
+      disabled: true,
+      children: [
+        {
+          element: 'block',
+          type: 'contailner',
+          disabled: true,
+          children: [
+            {
+              "element": "form", // 元素名称 or 类型
+              "type": "container", // container or element
+              "clone": true,
+              // disabled: true,
+              props: {
+                size: 'mini'
+              },
+              children: [
+                {
+                  "element": "form-item", // 元素名称 or 类型
+                  "type": "container", // container or element
+                  disabled: true,
+                  props: {
+                    label: "表单项"
+                  },
+                  children: [
+                    {
+                      disabled: true,
+                      "element": "input", // 元素名称 or 类型
+                      "type": "element", // container or element
+                      props: {
+                      },
+                    },
+                  ]
+                },
+              ]
+            },
+          ]
+        },
+        {
+          element: 'block',
+          type: 'contailner',
+          children: [
+            {
+              "element": "radio",
+              "type": "element",
+              "name": "单选框",
+              "clone": true,
+              "props": {
+                options: [
+                  {
+                    label: "备选项1",
+                    value: "1",
+                  },
+                  {
+                    label: "备选项2",
+                    value: "2",
+                  }
+                ]
+              }, // 参数
+            },
+            {
+              "element": "checkbox",
+              "type": "element",
+              "name": "多选框",
+              "clone": true,
+              "props": {
+                options: [
+                  {
+                    label: "备选项1",
+                    value: "12",
+                  },
+                  {
+                    label: "备选项2",
+                    value: "23",
+                  }
+                ]
+              }, // 参数
+            },
+            {
+              "element": "select",
+              "type": "element",
+              "name": "多选框",
+              "clone": true,
+              "props": {
+                options: [
+                  {
+                    label: "备选项1",
+                    value: "12",
+                  },
+                  {
+                    label: "备选项2",
+                    value: "23",
+                  }
+                ]
+              }, // 参数
+            },
+            {
+              "element": "switch",
+              "type": "element",
+              "name": "开关",
+              "clone": true,
+              "props": {}, // 参数
+            },
+            {
+              "element": "slider",
+              "type": "element",
+              "name": "滑块",
+              "clone": true,
+              "props": {}, // 参数
+            },
+            {
+              "element": "time-picker",
+              "type": "element",
+              "name": "时间选择器",
+              "clone": true,
+              "props": {}, // 参数
+            },
+            {
+              "element": "date-picker",
+              "type": "element",
+              "name": "日期选择器",
+              "clone": true,
+              "props": {}, // 参数
+            },
+          ]
+        },
+      ]
+    }
   ]
 }
 </script>

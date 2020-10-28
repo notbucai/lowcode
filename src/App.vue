@@ -26,7 +26,7 @@
         </div>
       </el-header>
       <el-container>
-        <el-aside width="200px">
+        <el-aside width="260px">
           <low-aside />
         </el-aside>
         <el-main>
