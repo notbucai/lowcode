@@ -14,5 +14,5 @@ export type LowElement = {
 
 export type LowDrapElement = LowElement & {
   clone?: boolean;
-  deleted?: boolean;
+  disabled?: boolean;
 }

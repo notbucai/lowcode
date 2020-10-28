@@ -145,7 +145,7 @@ export default class DragLayout extends Vue {
   handleCloneTree (oldElement: LowDrapElement) {
     const element = Object.assign({}, oldElement);
     delete element.clone;
-    delete element.deleted;
+    delete element.disabled;
 
     element.id = generateUUID();
     if (element.type === 'container') {
