@@ -8,6 +8,7 @@
     :disabled="disabled"
     :sort="sort"
     :data-tag="element"
+    :data-name="name"
     :data-path="currentPath"
     @change="emitter"
   >
@@ -23,7 +24,6 @@
         v-bind="item"
         :path="currentPath"
         :show="show"
-        :disabled="currentDisabled"
         @input="emitter"
       />
     </component>
@@ -71,6 +71,11 @@ export default class DragLayout extends Vue {
   @Prop({
     type: String,
   })
+  name?: string; // 名称
+
+  @Prop({
+    type: String,
+  })
   element?: string; // 元素名称 or 类型
   @Prop({
     type: String,
@@ -96,10 +101,6 @@ export default class DragLayout extends Vue {
   get currentDisabled () {
     const draggableOptions = this.draggableOptions;
     let res = draggableOptions && draggableOptions.clone;
-
-    // if (!res && this.current) {
-    //   res = this.current !== this.id;
-    // }
 
     return res;
   }
@@ -144,6 +145,7 @@ export default class DragLayout extends Vue {
   handleCloneTree (oldElement: LowDrapElement) {
     const element = Object.assign({}, oldElement);
     delete element.clone;
+    delete element.deleted;
 
     element.id = generateUUID();
     if (element.type === 'container') {
@@ -182,7 +184,7 @@ export default class DragLayout extends Vue {
   position: relative;
   &::before {
     position: absolute;
-    content: attr(data-tag);
+    content: attr(data-name);
     font-size: 12px;
     left: 0;
     top: 0;
