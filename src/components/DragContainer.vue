@@ -32,6 +32,7 @@
 <script lang='ts'>
 import { Component, Prop, Vue, Inject } from 'vue-property-decorator';
 import { State } from 'vuex-class'
+import { cloneDeep } from 'lodash';
 
 import mixins from '@/mixins';
 import { LowDrapElement, LowElement } from '@/types/Element';
@@ -143,9 +144,10 @@ export default class DragLayout extends Vue {
   }
 
   handleCloneTree (oldElement: LowDrapElement) {
-    const element = Object.assign({}, oldElement);
+    const element: LowDrapElement = cloneDeep(oldElement);
     delete element.clone;
     delete element.disabled;
+    element.props = Object.assign({}, element.props);
 
     element.id = generateUUID();
     if (element.type === 'container') {
