@@ -369,72 +369,97 @@ export default class LowAside extends Vue {
                 ]
               }, // 参数
             },
-            {
-              "element": "checkbox",
-              "type": "element",
-              "name": "多选框",
-              "clone": true,
-              "props": {
-                options: [
-                  {
-                    label: "备选项1",
-                    value: "12",
-                  },
-                  {
-                    label: "备选项2",
-                    value: "23",
-                  }
-                ]
-              }, // 参数
-            },
-            {
-              "element": "select",
-              "type": "element",
-              "name": "多选框",
-              "clone": true,
-              "props": {
-                options: [
-                  {
-                    label: "备选项1",
-                    value: "12",
-                  },
-                  {
-                    label: "备选项2",
-                    value: "23",
-                  }
-                ]
-              }, // 参数
-            },
-            {
-              "element": "switch",
-              "type": "element",
-              "name": "开关",
-              "clone": true,
-              "props": {}, // 参数
-            },
-            {
-              "element": "slider",
-              "type": "element",
-              "name": "滑块",
-              "clone": true,
-              "props": {}, // 参数
-            },
-            {
-              "element": "time-picker",
-              "type": "element",
-              "name": "时间选择器",
-              "clone": true,
-              "props": {}, // 参数
-            },
-            {
-              "element": "date-picker",
-              "type": "element",
-              "name": "日期选择器",
-              "clone": true,
-              "props": {}, // 参数
-            },
+
           ]
         },
+        {
+          element: 'block',
+          type: 'contailner',
+          children: [{
+            "element": "checkbox",
+            "type": "element",
+            "name": "多选框",
+            "clone": true,
+            "props": {
+              options: [
+                {
+                  label: "备选项1",
+                  value: "12",
+                },
+                {
+                  label: "备选项2",
+                  value: "23",
+                }
+              ]
+            }, // 参数
+          }]
+        },
+        {
+          element: 'block',
+          type: 'contailner',
+          children: [{
+            "element": "select",
+            "type": "element",
+            "name": "多选框",
+            "clone": true,
+            "props": {
+              options: [
+                {
+                  label: "备选项1",
+                  value: "12",
+                },
+                {
+                  label: "备选项2",
+                  value: "23",
+                }
+              ]
+            }, // 参数
+          },]
+        },
+        {
+          element: 'block',
+          type: 'contailner',
+          children: [{
+            "element": "switch",
+            "type": "element",
+            "name": "开关",
+            "clone": true,
+            "props": {}, // 参数
+          }]
+        },
+        {
+          element: 'block',
+          type: 'contailner',
+          children: [{
+            "element": "slider",
+            "type": "element",
+            "name": "滑块",
+            "clone": true,
+            "props": {}, // 参数
+          }]
+        },
+        {
+          element: 'block',
+          type: 'contailner',
+          children: [{
+            "element": "time-picker",
+            "type": "element",
+            "name": "时间选择器",
+            "clone": true,
+            "props": {}, // 参数
+          }]
+        },
+        {
+          element: 'block',
+          type: 'contailner',
+          children: [{
+            "element": "date-picker",
+            "type": "element",
+            "name": "日期选择器",
+            "clone": true,
+            "props": {}, // 参数
+          }]
+        }
       ]
     }
   ]

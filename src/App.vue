@@ -123,7 +123,7 @@ export default class App extends Vue {
   handleShowCodeData () {
     function generate (item: LowElement) {
       const props = item.props || {};
-      const tagName = `bc-${item.element}`;
+      const tagName = `el-${item.element}`;
 
       let children: string = (item.children || []).map(item => {
         return generate(item);
