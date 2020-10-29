@@ -216,6 +216,19 @@ export default class LowAside extends Vue {
               }
             },
           ]
+        },{
+          element: 'block',
+          type: 'contailner',
+          children: [
+            {
+              "element": "block", // 元素名称 or 类型
+              "type": "container", // container or element
+              "clone": true,
+              name: "块元素",
+
+              props: {}
+            },
+          ]
         },
         {
           element: 'block',
