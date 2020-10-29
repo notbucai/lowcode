@@ -8,10 +8,7 @@
       size="mini"
     >
       <el-form-item label="输入框占位文本">
-        <el-input
-          v-model="form.placeholder"
-          placeholder="请输入"
-        ></el-input>
+        <el-input v-model="form.placeholder" placeholder="请输入"></el-input>
       </el-form-item>
 
       <el-form-item label="最大输入长度">
@@ -106,7 +103,7 @@ import BaseOptions from './BaseOptions';
 
 type LowProps = {
   size: "medium" | "small" | "mini" | '';
-  type: "primary" | "success" | "warning" | "danger" | "info" | "text" | '';
+  type: "text" | "textarea" | '';
 
   disabled: boolean;
   autofocus: boolean;
@@ -128,7 +125,7 @@ type LowProps = {
 @Component({
 
 })
-export default class Row extends BaseOptions {
+export default class Input extends BaseOptions {
 
   get props () {
     return this.element ? this.element.props : null
@@ -166,7 +163,7 @@ export default class Row extends BaseOptions {
 
   handleUpdateData () {
     const props = this.props;
-    const form:any = {};
+    const form: any = {};
     Object.keys(this.form).forEach(key => {
       const val = props ? props[key] : this.defaultForm[key];
       this.$set(this.form, key, val);

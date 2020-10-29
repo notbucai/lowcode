@@ -1,11 +1,9 @@
 <template>
-  <el-tag>{{ text }}</el-tag>
+  <el-tag v-bind="$props">{{ text }}</el-tag>
 </template>
 <script>
 export default {
-  props: {
-    text: String
-  },
+  props: ['text', 'type', 'closable', 'effect', 'size'],
   data () {
     return {
     };

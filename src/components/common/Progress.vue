@@ -1,11 +1,9 @@
 <template>
-  <el-progress :percentage="percentage"></el-progress>
+  <el-progress v-bind="$props"></el-progress>
 </template>
 <script>
 export default {
-  props: {
-    percentage: Number
-  },
+  props: ['percentage', 'type', 'status', 'showText'],
   data () {
     return {
     };

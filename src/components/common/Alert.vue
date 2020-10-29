@@ -1,11 +1,9 @@
 <template>
-  <el-alert :title="title" type="success"> </el-alert>
+  <el-alert v-bind="$props"> </el-alert>
 </template>
 <script>
 export default {
-  props: {
-    title: String
-  },
+  props: ['title', 'description', 'type', 'closable', 'effect', 'center'],
   data () {
     return {
     };

@@ -4,36 +4,17 @@
       :model="form"
       ref="form"
       :rules="rules"
-      :inline="false"
       size="mini"
+      label-position="top"
     >
-      <el-form-item label="尺寸">
-        <el-select v-model="form.size">
-          <el-option label="默认" value=""> </el-option>
-          <el-option label="中等" value="medium"> </el-option>
-          <el-option label="小" value="small"> </el-option>
-          <el-option label="迷你" value="mini"> </el-option>
-        </el-select>
-      </el-form-item>
-
-      <el-form-item label="表单域标签的位置">
-        <el-select v-model="form.labelPosition">
-          <el-option label="默认" value=""> </el-option>
-          <el-option label="右" value="right"> </el-option>
-          <el-option label="左" value="left"> </el-option>
-          <el-option label="上" value="top"> </el-option>
-        </el-select>
-      </el-form-item>
-
-      <el-form-item label="行内表单模式">
-        <el-switch v-model="form.inline"> </el-switch>
-      </el-form-item>
-
-      <el-form-item label="表单域标签的宽度">
-        <el-input
-          v-model="form.labelWidth"
-          placeholder="请输入，如50px"
-        ></el-input>
+      <el-form-item>
+        <el-alert
+          title="无属性"
+          type="info"
+          effect="light"
+          :closable="false"
+          center
+        ></el-alert>
       </el-form-item>
 
       <el-form-item>
@@ -42,6 +23,7 @@
           <el-button @click="handleClose">取消</el-button>
         </div>
       </el-form-item>
+
       <el-form-item>
         <div class="formAction">
           <el-button type="danger" @click="handleRemove">删除</el-button>
@@ -56,19 +38,12 @@ import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import BaseOptions from './BaseOptions';
 
 type LowProps = {
-  size: "medium" | "small" | "mini" | '';
-
-  inline: boolean;
-
-  labelWidth: string;
-  labelPosition: 'right' | 'left' | 'top' | '';
-
 }
 
 @Component({
 
 })
-export default class Form extends BaseOptions {
+export default class DatePicker extends BaseOptions {
 
   get props () {
     return this.element ? this.element.props : null
@@ -79,10 +54,6 @@ export default class Form extends BaseOptions {
   };
 
   form: LowProps = {
-    size: '',
-    inline: false,
-    labelWidth: '',
-    labelPosition: ''
   }
   defaultForm: any;
 
@@ -95,13 +66,11 @@ export default class Form extends BaseOptions {
 
   handleUpdateData () {
     const props = this.props;
-    const form: any = {};
+
     Object.keys(this.form).forEach(key => {
       const val = props ? props[key] : this.defaultForm[key];
       this.$set(this.form, key, val);
-      form[key] = val;
     });
-    // this.form = form;
   }
 
   @Watch('props')

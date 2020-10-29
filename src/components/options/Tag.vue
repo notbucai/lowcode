@@ -7,6 +7,22 @@
       :inline="false"
       size="mini"
     >
+      <el-form-item label="文本">
+        <el-input v-model="form.text" placeholder="请输入"></el-input>
+      </el-form-item>
+
+      <el-form-item label="类型">
+        <el-select v-model="form.type">
+          <el-option label="默认" value=""> </el-option>
+          <el-option label="主要" value="primary"> </el-option>
+          <el-option label="成功" value="success"> </el-option>
+          <el-option label="警告" value="warning"> </el-option>
+          <el-option label="危险" value="danger"> </el-option>
+          <el-option label="提示" value="info"> </el-option>
+          <el-option label="文字" value="text"> </el-option>
+        </el-select>
+      </el-form-item>
+
       <el-form-item label="尺寸">
         <el-select v-model="form.size">
           <el-option label="默认" value=""> </el-option>
@@ -16,24 +32,18 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="表单域标签的位置">
-        <el-select v-model="form.labelPosition">
+      <el-form-item label="主题">
+        <el-select v-model="form.effect">
+          <!-- "dark" | "light" | "plain"  -->
           <el-option label="默认" value=""> </el-option>
-          <el-option label="右" value="right"> </el-option>
-          <el-option label="左" value="left"> </el-option>
-          <el-option label="上" value="top"> </el-option>
+          <el-option label="dark" value="dark"> </el-option>
+          <el-option label="light" value="light"> </el-option>
+          <el-option label="plain" value="plain"> </el-option>
         </el-select>
       </el-form-item>
 
-      <el-form-item label="行内表单模式">
-        <el-switch v-model="form.inline"> </el-switch>
-      </el-form-item>
-
-      <el-form-item label="表单域标签的宽度">
-        <el-input
-          v-model="form.labelWidth"
-          placeholder="请输入，如50px"
-        ></el-input>
+      <el-form-item label="是否可关闭">
+        <el-switch v-model="form.closable"></el-switch>
       </el-form-item>
 
       <el-form-item>
@@ -42,6 +52,7 @@
           <el-button @click="handleClose">取消</el-button>
         </div>
       </el-form-item>
+
       <el-form-item>
         <div class="formAction">
           <el-button type="danger" @click="handleRemove">删除</el-button>
@@ -56,19 +67,17 @@ import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import BaseOptions from './BaseOptions';
 
 type LowProps = {
-  size: "medium" | "small" | "mini" | '';
-
-  inline: boolean;
-
-  labelWidth: string;
-  labelPosition: 'right' | 'left' | 'top' | '';
-
+  text: string;
+  type: "success" | "info" | "warning" | "danger" | '';
+  closable: boolean;
+  effect: "dark" | "light" | "plain" | '',
+  size: "medium" | "small" | "mini" | '',
 }
 
 @Component({
 
 })
-export default class Form extends BaseOptions {
+export default class Tag extends BaseOptions {
 
   get props () {
     return this.element ? this.element.props : null
@@ -79,10 +88,11 @@ export default class Form extends BaseOptions {
   };
 
   form: LowProps = {
-    size: '',
-    inline: false,
-    labelWidth: '',
-    labelPosition: ''
+    text: '',
+    type: '',
+    closable: false,
+    effect: '',
+    size: ''
   }
   defaultForm: any;
 
@@ -95,13 +105,10 @@ export default class Form extends BaseOptions {
 
   handleUpdateData () {
     const props = this.props;
-    const form: any = {};
     Object.keys(this.form).forEach(key => {
       const val = props ? props[key] : this.defaultForm[key];
       this.$set(this.form, key, val);
-      form[key] = val;
     });
-    // this.form = form;
   }
 
   @Watch('props')

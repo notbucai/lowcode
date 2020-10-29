@@ -1,11 +1,9 @@
 <template>
-  <el-pagination layout="prev, pager, next" :total="total" background></el-pagination>
+  <el-pagination layout="prev, pager, next" v-bind="$props"></el-pagination>
 </template>
 <script>
 export default {
-  props: {
-    total: Number
-  },
+  props: ['total', 'pageSize', 'background', 'hideOnSinglePage', 'currentPage'],
   data () {
     return {
     };

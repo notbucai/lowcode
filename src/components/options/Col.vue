@@ -51,7 +51,7 @@ type LowProps = {
 @Component({
 
 })
-export default class Row extends BaseOptions {
+export default class Col extends BaseOptions {
 
   get props () {
     return this.element ? this.element.props : null
