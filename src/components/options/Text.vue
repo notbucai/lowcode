@@ -22,12 +22,23 @@
         ></el-input>
       </el-form-item>
 
+      <el-form-item label="行高">
+        <el-input
+          v-model="form.lineHeight"
+          placeholder="请输入,如 16px"
+        ></el-input>
+      </el-form-item>
+
       <el-form-item label="居中">
         <el-switch v-model="form.center"></el-switch>
       </el-form-item>
 
       <el-form-item label="块">
         <el-switch v-model="form.block"></el-switch>
+      </el-form-item>
+
+      <el-form-item label="粗体">
+        <el-switch v-model="form.bold"></el-switch>
       </el-form-item>
 
       <el-form-item>
@@ -55,7 +66,9 @@ type LowProps = {
   fontSize: string;
   color: string;
   center: boolean;
-  block: boolean
+  block: boolean;
+  bold: boolean;
+  lineHeight: string;
 }
 
 @Component({
@@ -76,7 +89,9 @@ export default class Text extends BaseOptions {
     fontSize: '',
     color: '',
     center: false,
-    block: false
+    block: false,
+    bold: false,
+    lineHeight: '1'
   }
   defaultForm: any;
 
