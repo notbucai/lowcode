@@ -1,24 +1,26 @@
 <template>
   <div class="low-aside">
-    <el-collapse v-show="!current">
-      <el-collapse-item
-        :title="item.label"
-        :name="item.label"
-        v-for="item in elements"
-        :key="item.label"
-      >
-        <div class="low-component-item">
-          <drag-container v-bind="item" />
-        </div>
-      </el-collapse-item>
-    </el-collapse>
-    <!-- 配置页 -->
-    <div v-if="current">
-      <component
-        :is="'bc-' + current.element + '-option'"
-        :element="current"
-      ></component>
-    </div>
+    <el-scrollbar class="aside-scrollbar">
+      <el-collapse v-show="!current">
+        <el-collapse-item
+          :title="item.label"
+          :name="item.label"
+          v-for="item in elements"
+          :key="item.label"
+        >
+          <div class="low-component-item">
+            <drag-container v-bind="item" />
+          </div>
+        </el-collapse-item>
+      </el-collapse>
+      <!-- 配置页 -->
+      <div v-if="current">
+        <component
+          :is="'bc-' + current.element + '-option'"
+          :element="current"
+        ></component>
+      </div>
+    </el-scrollbar>
   </div>
 </template>
 <script lang='ts'>
@@ -467,6 +469,7 @@ export default class LowAside extends Vue {
 </script>
 <style lang="scss" scoped>
 .low-aside {
+  height: calc(100vh - 50px);
   .low-component-item {
     position: relative;
     padding: 18px 10px;
@@ -478,6 +481,10 @@ export default class LowAside extends Vue {
       line-height: 2.4;
       padding: 0 10px;
     }
+  }
+  .aside-scrollbar {
+    overflow-y: hidden;
+    height: 100%;
   }
 }
 </style>
