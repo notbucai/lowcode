@@ -42,7 +42,25 @@
       width="680px"
       @close="showCode = false"
     >
-      <textarea style="width: 100%" rows="20" :value="code" disabled></textarea>
+      <el-tabs>
+        <el-tab-pane label="CODE">
+          <textarea
+            style="width: 100%;box-sizing: border-box;padding:10px"
+            rows="20"
+            :value="code"
+            disabled
+          ></textarea>
+        </el-tab-pane>
+        <el-tab-pane label="JSON">
+          <textarea
+            style="width: 100%;box-sizing: border-box;padding:10px"
+            rows="20"
+            :value="JSON.stringify(elements, null, 2)"
+            disabled
+          ></textarea>
+        </el-tab-pane>
+      </el-tabs>
+
       <span slot="footer">
         <el-button size="mini" @click="showCode = false">Cancel</el-button>
         <el-button type="primary" size="mini" v-clipboard="code"
