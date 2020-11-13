@@ -120,9 +120,11 @@ data = {
 ### NEXT 产生的问题/想法
 
 想这个的时候脑子爆栈了, 所以用笔辅助了一下，字很差，看个灵魂就好。
-![models](./docs-assets/models.jpg)
+![models](./docs-assets/models.jpg)  
 
-感觉操作逐渐复杂起来
+感觉操作逐渐复杂起来  
+
+感觉还得有个替换父级的功能
 
 ## 进度
 
