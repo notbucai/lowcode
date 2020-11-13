@@ -4,6 +4,7 @@ import { getFinderFunctionByChildKeyFromTree } from '@/utils'
 // import LowElement from '../types/Element'
 import Vue from 'vue'
 import Vuex from 'vuex'
+import PageStore from './modules/Page';
 
 const history = new History();
 
@@ -15,6 +16,9 @@ type StateType = {
 }
 
 export default new Vuex.Store<StateType>({
+  modules: {
+    page: PageStore
+  },
   state: {
     currentId: undefined,
     elements: {
@@ -38,10 +42,10 @@ export default new Vuex.Store<StateType>({
   mutations: {
     UPDATE (state) {
       // 添加到历史
-      console.log('history',history.get());
+      // console.log('history', history.get());
       history.pushSync(state.elements);
-      console.log('history',history.get());
-      
+      // console.log('history', history.get());
+
     },
     UNDO (state) {
       state.elements = history.undo().get();
@@ -51,6 +55,16 @@ export default new Vuex.Store<StateType>({
     },
     SET_CURRENT (state, payload: string) {
       state.currentId = payload;
+    },
+    BIND_MODELS (state, payload) {
+      if (typeof state.currentId !== 'string') return;
+      const find = getFinderFunctionByChildKeyFromTree(state.elements);
+      let [parent, current] = find(state.currentId);
+      
+      if (current) {
+        current = current as LowElement;
+        current.models = payload;
+      }
     },
     UPDATE_CURRENT_PROPS (state, payload: any) {
       if (typeof state.currentId !== 'string') return;
@@ -90,6 +104,4 @@ export default new Vuex.Store<StateType>({
   actions: {
 
   },
-  modules: {
-  }
 })

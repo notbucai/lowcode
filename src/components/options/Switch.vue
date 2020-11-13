@@ -41,7 +41,7 @@ type LowProps = {
 }
 
 @Component({
-
+  name:'bc-switch-option'
 })
 export default class Switch extends BaseOptions {
 

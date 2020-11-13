@@ -72,7 +72,7 @@ type LowProps = {
 }
 
 @Component({
-
+  name: 'bc-text-option'
 })
 export default class Text extends BaseOptions {
 

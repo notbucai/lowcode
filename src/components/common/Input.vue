@@ -1,11 +1,36 @@
 <template>
-  <el-input v-bind="$props"></el-input>
+  <el-input v-bind="props" v-model="value"></el-input>
 </template>
 <script>
+import { mapState } from 'vuex';
+import { getDataByModel, setDataByModel } from '@/utils/page';
+
 export default {
-  props: ["size", "type", "disabled", "autofocus", "maxlength", "minlength", "showWordLimit", "placeholder", "clearable", "showPassword", "prefixIcon", "suffixIcon", "rows", "readonly", "tabindex"],
-  updated () {
-  }
+  props: ['props', 'models'],
+  modelOptions: [{
+    key: 'value',
+    name: '值'
+  }],
+  computed: {
+    value: {
+      get () {
+        if (this.models && this.models.value) {
+          return getDataByModel(this.data, this.models.value);
+        }
+        return '';
+      },
+      set (value) {
+        setDataByModel(this.data, this.models.value, value);
+      }
+    },
+    ...mapState({
+      data (state) {
+        return state.page.data
+      }
+    })
+  },
+
+
 }
 </script>
 <style lang="scss" scoped>

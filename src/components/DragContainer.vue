@@ -18,6 +18,8 @@
       v-bind="item.props"
       :is="'bc-' + item.element"
       :data-tag="item.element"
+      :props="item.props"
+      :models="item.models"
       @click.native.stop.prevent="handleClickItem(item)"
     >
       <drag-container

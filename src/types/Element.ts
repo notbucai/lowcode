@@ -5,6 +5,9 @@ export type LowElement = {
   id: string;
   element: string;
   type: 'element' | 'container';
+  models?: {
+    [key: string]: string;
+  },
   props?: {
     [key: string]: any;
     [key: number]: any;

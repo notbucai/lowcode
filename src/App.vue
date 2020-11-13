@@ -26,7 +26,7 @@
         </div>
       </el-header>
       <el-container>
-        <el-aside width="260px">
+        <el-aside width="280px">
           <low-aside />
         </el-aside>
         <el-main>
@@ -97,6 +97,8 @@ export default class App extends Vue {
 
   private created () {
     this.$store.commit('UPDATE');
+    this.$store.dispatch('page/init');
+    // 
     tinykeys(window, {
       "$mod+z": () => {
         this.$store.commit('UNDO');

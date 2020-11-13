@@ -1,36 +1,97 @@
 <template>
   <div class="low-aside">
-    <el-scrollbar class="aside-scrollbar">
-      <el-collapse v-show="!current">
-        <el-collapse-item
-          :title="item.label"
-          :name="item.label"
-          v-for="item in elements"
-          :key="item.label"
-        >
-          <div class="low-component-item">
-            <drag-container v-bind="item" />
-          </div>
-        </el-collapse-item>
-      </el-collapse>
-      <!-- 配置页 -->
-      <div v-if="current">
-        <component
-          :is="'bc-' + current.element + '-option'"
-          :element="current"
-        ></component>
+    <div class="aside-action">
+      <div
+        class="action-item"
+        :class="{ active: activeAction === 'components' }"
+        @click="activeAction = 'components'"
+      >
+        <span class="el-icon-s-grid"></span>
       </div>
-    </el-scrollbar>
+      <div
+        class="action-item"
+        @click="activeAction = 'models'"
+        :class="{ active: activeAction === 'models' }"
+      >
+        <span class="el-icon-s-data"></span>
+      </div>
+    </div>
+    <!-- 组件相关 -->
+    <div class="aside-handle" v-if="activeAction == 'components'">
+      <el-scrollbar class="aside-scrollbar">
+        <el-collapse v-show="!current">
+          <el-collapse-item
+            :title="item.label"
+            :name="item.label"
+            v-for="item in elements"
+            :key="item.label"
+          >
+            <div class="low-component-item">
+              <drag-container v-bind="item" />
+            </div>
+          </el-collapse-item>
+        </el-collapse>
+        <!-- 配置页 -->
+        <div v-if="current">
+          <component
+            :is="'bc-' + current.element + '-option'"
+            :element="current"
+          ></component>
+        </div>
+      </el-scrollbar>
+    </div>
+    <!-- 数据源相关 -->
+    <div class="aside-handle" v-if="activeAction == 'models'">
+      <el-scrollbar class="aside-scrollbar">
+        <el-collapse v-show="!current">
+          <el-collapse-item
+            :title="item.name"
+            :name="item.name"
+            v-for="item in models"
+            :key="item.key"
+          >
+            <div
+              class="low-model-item"
+              v-for="entity in item.entitys"
+              :key="entity.key"
+            >
+              <pre
+                style="font-size: 12px; line-height: 1.4; padding: 4px 10px"
+                >{{ JSON.stringify(entity, null, 2) }}</pre
+              >
+            </div>
+          </el-collapse-item>
+        </el-collapse>
+        <!-- 配置页 -->
+        <div v-if="current">
+          <!-- <component
+            :is="'bc-' + current.element + '-model'"
+            :element="current"
+          ></component> -->
+          <low-model />
+        </div>
+      </el-scrollbar>
+    </div>
   </div>
 </template>
 <script lang='ts'>
+import LowModel from '@/components/models/Index.vue'
 import { Component, Vue, Provide } from 'vue-property-decorator';
 import { Getter, State } from 'vuex-class';
 import { LowElement } from '@/types/Element';
+import { ModelType } from '@/store/modules/Page';
 @Component({
   name: 'low-aside',
+  components: {
+    LowModel
+  }
 })
 export default class LowAside extends Vue {
+
+  activeAction: 'components' | 'models' = 'components';
+
+  @State('models', { namespace: 'page' })
+  models?: ModelType[];
 
   @State('currentId')
   currentId?: string;
@@ -216,7 +277,7 @@ export default class LowAside extends Vue {
               }
             },
           ]
-        },{
+        }, {
           element: 'block',
           type: 'contailner',
           children: [
@@ -483,6 +544,37 @@ export default class LowAside extends Vue {
 <style lang="scss" scoped>
 .low-aside {
   height: calc(100vh - 50px);
+  display: flex;
+  .aside-action {
+    width: 46px;
+    min-width: 46px;
+    position: relative;
+    z-index: 1;
+    background-color: #fff;
+    border-right: 1px solid #eee;
+    box-shadow: 0px 0 8px rgba($color: #888, $alpha: 0.2);
+    .action-item {
+      width: 46px;
+      height: 46px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgb(97, 92, 92);
+      cursor: pointer;
+      user-select: none;
+      &.active {
+        color: #2196f3;
+        background-color: #ecf5ff;
+      }
+      span {
+        font-size: 20px;
+      }
+    }
+  }
+  .aside-handle {
+    flex: 1;
+    overflow: hidden;
+  }
   .low-component-item {
     position: relative;
     padding: 18px 10px;

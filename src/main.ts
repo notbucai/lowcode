@@ -7,15 +7,17 @@ Vue.use(ElementUI);
 Vue.component('draggable', vuedraggable);
 import './components';
 import store from './store'
+import router from './router'
 
 Vue.config.productionTip = process.env.NODE_ENV !== 'production';
 
-store.subscribe((mutation, state) => {
-  console.log(mutation.type)
-  console.log(mutation.payload)
-})
+// store.subscribe((mutation, state) => {
+//   console.log(mutation.type)
+//   console.log(mutation.payload)
+// })
 
 new Vue({
   store,
+  router,
   render: h => h(App)
 }).$mount('#app')
