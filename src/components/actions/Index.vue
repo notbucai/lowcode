@@ -2,7 +2,7 @@
  * @Author: bucai
  * @Date: 2021-02-19 15:58:38
  * @LastEditors: bucai
- * @LastEditTime: 2021-03-23 18:40:54
+ * @LastEditTime: 2021-03-23 23:08:10
  * @Description:
 -->
 <template>
@@ -223,6 +223,9 @@ export default class LowActions extends Vue {
   @Getter('flatElements')
   flatElements?: LowElement[];
 
+  @State('elements')
+  elements?: LowElement;
+
   @State('_actions', { namespace: 'page' })
   actions?: any;
 
@@ -301,7 +304,9 @@ export default class LowActions extends Vue {
     if (!element) return;
     const component = components.find(item => item.name === element)
     if (!component) return;
-    this.options = component.component.actioOptions || [];
+    this.options = (component.component.actioOptions || []).filter((item: any) => {
+      return !item.beIncluded || this.hasElementExistParentsByElement(item.beIncluded)
+    });
   }
 
   initLinkOptions () {
@@ -429,6 +434,35 @@ export default class LowActions extends Vue {
 
   handleClose () {
     this.$store.commit("SET_CURRENT", undefined);
+  }
+
+  hasElementExistParentsByElement (element: string) {
+    const current = this.current;
+    if (!current) return false;
+
+    const find = (list: any[], id: string) => {
+      let resList: any[] = [];
+      list.forEach(item => {
+        if (item.children && item.children.length) {
+          const res = find(item.children, id);
+          if (res && res.length) {
+            resList.push(item, ...res);
+          }
+        }
+        if (item.id === id) {
+          resList.push(item);
+        }
+      });
+
+      return resList;
+    };
+    const id = current.id;
+
+    const chainList = find(this.elements?.children || [], id);
+    // 去掉当前的元素
+    chainList.pop();
+    const is = chainList.find(item => item.element === element);
+    return is;
   }
 }
 </script>

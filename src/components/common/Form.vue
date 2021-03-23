@@ -1,5 +1,5 @@
 <template>
-  <el-form v-bind="$props" :model="model" :rules="rules">
+  <el-form ref="formEl" v-bind="$props" :model="model" :rules="rules">
     <slot></slot>
   </el-form>
 </template>
@@ -35,6 +35,9 @@ export default {
       }
       return undefined;
     }
+  },
+  methods: {
+
   }
 
 }
