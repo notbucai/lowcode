@@ -24,6 +24,39 @@ type Element = {
   };
   // 容器组件 存放的子元素
   children?: LowElement[];
+  models: {
+    [key: string]: '[model_key].?[key].?[key]', // key 为自定义
+  },
+  // 动作，这一块比较复杂
+  // 原本设计为[key:value]，由于可能存在描述信息，所以目前改成{xxx}
+  actions: [
+    {
+      key: string, // 随机生成
+      // 事件名称 按组件动态创建
+      name: string,
+      // event: 'click' | 'change' | 'submit', // 对应的可能是 @[event]="" 这个操作
+      event?: string, // 目前只有组件中才有意义
+      // 动作 目前按同步执行
+      handle: [
+        {
+          key: string, // 随机生成
+          name: string,
+          // location表示动作存在的位置 一般为element、global, type 表示类型 （如 fetch 发送请求）
+          // location 可能还有些复杂的设计 如元素可能绑定一个id，全局中是global_[namespace] 元素中可能是 element_[id]
+          // 例子: global_dialog.b2d12 | element_1e4sa.12342
+          link: '[location].[key]', // 关联 的触发动作 可能是发送请求 可能是 触发其他元素的动作
+          // 这个可用于接口方法和传输 以及 Open dialog
+          data?: {
+            // 参考 models
+            bind?: string, // 绑定的数据源 接口请求、打开dialog或者其他需要数据关联的操作
+            recv?: string, // 接受响应的数据源
+          }
+        },
+        // ... more
+      ]
+    },
+    // ... more
+  ]
 }
 ```
 
@@ -92,6 +125,33 @@ data = {
     password: ''
   }
 }
+
+/**
+* 全局动作
+* 用于定义如打开dialog, 发送请求
+*/
+actions = {
+  // namespace为命名空间 一般已经内置命名空间 如 dialog fetch 等
+  // 每个命名空间对应一个 解析/执行 器
+  [namespace: string]: {
+    name: string,
+    actions: [
+      {
+        key: string, // 随机生成
+        //  eventName 事件名称 按组件/自定义名称动态创建
+        name: string,
+        // event: 'click' | 'change' | 'submit', // 对应的可能是 @[event]="" 这个操作
+        event?: string, // 目前只有组件中才有意义
+        // 动作 目前按同步执行
+        handle: [
+          // 需要根据解析器具体操作
+          // ... more
+        ]
+      }
+    ],
+    // ... more
+  }
+}
 ```
 
 ## 操作方面
@@ -134,6 +194,20 @@ data = {
 所以表单完成后需要一些操作如清空表单、更新数据源     
 
 一个接口可以对应多个数据源  
+
+
+### 动作
+
+一、类型  
+1. 组件创建进入获取初始化数据
+2. 增删改，分页
+3. 弹框 
+4. 表单提交    
+5. 页面跳转 可能带参数
+
+二、其他
+1. 时机   无非分为多个动作
+2. 动作   无非是（操作/提交）数据源 和 API调用
 
 ## 进度
 

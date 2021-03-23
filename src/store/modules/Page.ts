@@ -56,37 +56,80 @@ export default class PageStore extends VuexModule {
     * 模型
     */
    models: ModelType[] = [
-      {
-         name: "表单", // 数据源名称
-         key: 'model_1a52926d55f3', // 绑定的字段 该字段创建的时候生成
-         // 实体
-         entitys: [
-            {
-               key: 'username', // 绑定的字段 输入
-               name: "用户名", // 实体名称 输入
-               type: 'string', // 数据类型 选择
-               value: '""', // 默认值 输入
-            },
-            {
-               key: 'password', // 绑定的字段 输入
-               name: "密码", // 实体名称 输入
-               type: 'string', // 数据类型 选择
-               value: '""', // 默认值 输入
-            },
-            // ...more
-         ]
-      }
+      // {
+      //    name: "表单", // 数据源名称
+      //    key: 'model_1a52926d55f3', // 绑定的字段 该字段创建的时候生成
+      //    // 实体
+      //    entitys: [
+      //       {
+      //          key: 'username', // 绑定的字段 输入
+      //          name: "用户名", // 实体名称 输入
+      //          type: 'string', // 数据类型 选择
+      //          value: '""', // 默认值 输入
+      //       },
+      //       {
+      //          key: 'password', // 绑定的字段 输入
+      //          name: "密码", // 实体名称 输入
+      //          type: 'string', // 数据类型 选择
+      //          value: '""', // 默认值 输入
+      //       },
+      //       // ...more
+      //    ]
+      // },
+      // {
+      //    name: "测试", // 数据源名称
+      //    key: 'model_42124s1ar2', // 绑定的字段 该字段创建的时候生成
+      //    // 实体
+      //    entitys: [
+      //       {
+      //          key: 'token', // 绑定的字段 输入
+      //          name: "token", // 实体名称 输入
+      //          type: 'string', // 数据类型 选择
+      //          value: '""', // 默认值 输入
+      //       },
+      //       // ...more
+      //    ]
+      // }
    ]
 
    /**
     * 数据
     */
    data: any = {
-      model_1a52926d55f3: {
-         username: '默认1',
-         password: '默认2'
+      // model_1a52926d55f3: {
+      //    username: '默认1',
+      //    password: '默认2'
+      // },
+      // model_42124s1ar2: {
+      //    token: ''
+      // }
+   }
+
+
+   /**
+    * 动作
+    */
+   _actions: any = {
+      dialog: {
+         name: "对话框",
+         handle: []
+      },
+      fetch: {
+         name: "接口请求",
+         actions: [
+            {
+               key: 'action_efhj123sadufk235ur',
+               name: "登录",
+               handle: 'POST[/api/login]',
+               data: {
+                  bind: 'model_1a52926d55f3',
+                  recv: 'model_2345423.token'
+               }
+            }
+         ]
       }
    }
+
    /**
     * 初始化模型
     */
@@ -114,6 +157,19 @@ export default class PageStore extends VuexModule {
             // ...more
          ]
       })
+      this.context.commit('ADD_MODEL', {
+         name: "Token", // 数据源名称
+         key: 'model_2345423', // 绑定的字段 该字段创建的时候生成
+         // 实体
+         entitys: [
+            {
+               key: 'token', // 绑定的字段 输入
+               name: "token", // 实体名称 输入
+               type: 'string', // 数据类型 选择
+               value: '""', // 默认值 输入
+            },
+         ]
+      });
       this.context.commit('ADD_MODEL', {
          name: '登录规则',
          key: 'rules',

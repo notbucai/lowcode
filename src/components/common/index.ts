@@ -17,7 +17,7 @@ function changeStr (str: string) {
 
 const requireComponent = require.context('.', false, /\.vue$/)
 
-requireComponent.keys().forEach(fileName => {
+export default requireComponent.keys().map(fileName => {
   const config = requireComponent(fileName)
   // console.log('config:', config)  // 打印
   const componentName = changeStr(
@@ -33,7 +33,11 @@ requireComponent.keys().forEach(fileName => {
   })
   // componentName
   modelConfig[element] = models;
-  Vue.component('Bc' + componentName, component) // 动态注册该目录下的所有.vue文件
+  Vue.component('Bc' + componentName, component); // 动态注册该目录下的所有.vue文件
+  return {
+    name: element,
+    component
+  }
 });
 
 console.log('%c成功加载组件数量:' + requireComponent.keys().length, "color:#409EFF;background-color:#ecf5ff;padding:0 10px;line-height:2;margin-bottom:4px;");

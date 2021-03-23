@@ -8,7 +8,18 @@ import PageStore from './modules/Page';
 
 const history = new History();
 
-Vue.use(Vuex)
+Vue.use(Vuex);
+
+const flattenElementsDeep = (element: LowElement) => {
+  const arr = [element];
+
+  element.children?.forEach(item => {
+    const list = flattenElementsDeep(item);
+    arr.push(...list);
+  });
+
+  return arr;
+}
 
 type StateType = {
   currentId: string | undefined | null;
@@ -26,6 +37,26 @@ export default new Vuex.Store<StateType>({
       "element": "layout", // 元素名称 or 类型
       "type": "container", // container or element
       "children": [
+        {
+          "element": "button",
+          "type": "element",
+          "props": { "text": "按钮名称" },
+          "id": "160092d6-7a49-4756-affc-b95a59c7d0e6",
+          actions: [
+            {
+              key: "action_123zdy123",
+              name: "点击登录",
+              event: 'click',
+              handle: [
+                {
+                  key: 'handle_23asdfhksadf',
+                  name: '调用接口',
+                  link: 'global_fetch.action_efhj123sadufk235ur',
+                }
+              ]
+            }
+          ]
+        }
       ]
     }
   },
@@ -37,6 +68,10 @@ export default new Vuex.Store<StateType>({
         return Array.isArray(resData) ? resData[1] : resData;
       }
       return null;
+    },
+    // 扁平化结构
+    flatElements (state) {
+      return flattenElementsDeep(state.elements);
     }
   },
   mutations: {
@@ -60,7 +95,7 @@ export default new Vuex.Store<StateType>({
       if (typeof state.currentId !== 'string') return;
       const find = getFinderFunctionByChildKeyFromTree(state.elements);
       let [parent, current] = find(state.currentId);
-      
+
       if (current) {
         current = current as LowElement;
         current.models = payload;

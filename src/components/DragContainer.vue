@@ -16,6 +16,7 @@
       v-for="item in children"
       :key="item.id"
       v-bind="item.props"
+      :actions="item.actions"
       :is="'bc-' + item.element"
       :data-tag="item.element"
       :props="item.props"

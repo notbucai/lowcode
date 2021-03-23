@@ -15,6 +15,13 @@
       >
         <span class="el-icon-s-data"></span>
       </div>
+      <div
+        class="action-item"
+        @click="activeAction = 'actions'"
+        :class="{ active: activeAction === 'actions' }"
+      >
+        <span class="el-icon-video-play"></span>
+      </div>
     </div>
     <!-- 组件相关 -->
     <div class="aside-handle" v-if="activeAction == 'components'">
@@ -72,10 +79,17 @@
         </div>
       </el-scrollbar>
     </div>
+    <!-- 数据源相关 -->
+    <div class="aside-handle" v-if="activeAction == 'actions'">
+      <el-scrollbar class="aside-scrollbar">
+        <low-actions />
+      </el-scrollbar>
+    </div>
   </div>
 </template>
 <script lang='ts'>
 import LowModel from '@/components/models/Index.vue'
+import LowActions from '@/components/actions/Index.vue'
 import { Component, Vue, Provide } from 'vue-property-decorator';
 import { Getter, State } from 'vuex-class';
 import { LowElement } from '@/types/Element';
@@ -83,7 +97,8 @@ import { ModelType } from '@/store/modules/Page';
 @Component({
   name: 'low-aside',
   components: {
-    LowModel
+    LowModel,
+    LowActions
   }
 })
 export default class LowAside extends Vue {

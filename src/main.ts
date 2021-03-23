@@ -8,6 +8,7 @@ Vue.component('draggable', vuedraggable);
 import './components';
 import store from './store'
 import router from './router'
+import actions from './plugins/actions';
 
 Vue.config.productionTip = process.env.NODE_ENV !== 'production';
 
@@ -15,6 +16,8 @@ Vue.config.productionTip = process.env.NODE_ENV !== 'production';
 //   console.log(mutation.type)
 //   console.log(mutation.payload)
 // })
+
+actions(store);
 
 new Vue({
   store,

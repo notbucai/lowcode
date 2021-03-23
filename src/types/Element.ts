@@ -1,4 +1,26 @@
 /**
+ * 单个动作处理配置
+ */
+export type LowElementActionHandle = {
+  key: string,
+  name: string,
+  link: string,
+  data?: {
+    bind?: string,
+    recv?: string,
+  }
+};
+/**
+ * 单个动作
+ */
+export type LowElementAction = {
+  key: string;
+  name: string;
+  event: string;
+  handle: LowElementActionHandle[];
+};
+
+/**
  * 元素类型
  */
 export type LowElement = {
@@ -13,6 +35,7 @@ export type LowElement = {
     [key: number]: any;
   };
   children?: LowElement[];
+  actions?: LowElementAction[]
 }
 
 export type LowDrapElement = LowElement & {

@@ -20,7 +20,7 @@
               icon="el-icon-view"
               plain
               circle
-              @click="show = !show"
+              @click="handleChangeShow"
             ></el-button>
           </div>
         </div>
@@ -45,7 +45,7 @@
       <el-tabs>
         <el-tab-pane label="CODE">
           <textarea
-            style="width: 100%;box-sizing: border-box;padding:10px"
+            style="width: 100%; box-sizing: border-box; padding: 10px"
             rows="20"
             :value="code"
             disabled
@@ -53,7 +53,7 @@
         </el-tab-pane>
         <el-tab-pane label="JSON">
           <textarea
-            style="width: 100%;box-sizing: border-box;padding:10px"
+            style="width: 100%; box-sizing: border-box; padding: 10px"
             rows="20"
             :value="JSON.stringify(elements, null, 2)"
             disabled
@@ -91,14 +91,14 @@ Vue.use(Clipboard);
     'low-aside': Aside
   },
   mixins: [mixins],
-
 })
 export default class App extends Vue {
 
   private created () {
     this.$store.commit('UPDATE');
     this.$store.dispatch('page/init');
-    // 
+    localStorage.removeItem('preview');
+    //
     tinykeys(window, {
       "$mod+z": () => {
         this.$store.commit('UNDO');
@@ -139,6 +139,15 @@ export default class App extends Vue {
   code: string = '';
 
   showCode: boolean = false;
+
+  handleChangeShow () {
+    this.show = !this.show;
+    if (this.show) {
+      localStorage.setItem('preview', 'true');
+    } else {
+      localStorage.removeItem('preview');
+    }
+  }
 
   handleShowCodeData () {
     function generate (item: LowElement) {
