@@ -36,28 +36,7 @@ export default new Vuex.Store<StateType>({
       "id": "c6174605-fb74-4fcb-884e-1a52926d55f3",
       "element": "layout", // 元素名称 or 类型
       "type": "container", // container or element
-      "children": [
-        {
-          "element": "button",
-          "type": "element",
-          "props": { "text": "按钮名称" },
-          "id": "160092d6-7a49-4756-affc-b95a59c7d0e6",
-          actions: [
-            {
-              key: "action_123zdy123",
-              name: "点击登录",
-              event: 'click',
-              handle: [
-                {
-                  key: 'handle_23asdfhksadf',
-                  name: '调用接口',
-                  link: 'global_fetch.action_efhj123sadufk235ur',
-                }
-              ]
-            }
-          ]
-        }
-      ]
+      "children": []
     }
   },
   getters: {

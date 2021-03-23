@@ -2,7 +2,7 @@
  * @Author: bucai
  * @Date: 2021-03-22 20:59:57
  * @LastEditors: bucai
- * @LastEditTime: 2021-03-23 14:29:30
+ * @LastEditTime: 2021-03-23 16:04:16
  * @Description:
  */
 import { Store } from "vuex";
@@ -19,7 +19,6 @@ export default async (store: Store<{ page: { _actions: any, data: any } }>, hand
   const action: any = actions[namespace].actions.find((item: { key: string }) => {
     return item.key === key;
   });
-  console.log('action', action);
 
   if (!action) return;
   const { handle: order, data: orderData } = action;

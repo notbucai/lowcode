@@ -2,21 +2,80 @@
  * @Author: bucai
  * @Date: 2021-02-19 15:58:38
  * @LastEditors: bucai
- * @LastEditTime: 2021-03-23 13:52:36
+ * @LastEditTime: 2021-03-23 18:40:54
  * @Description:
 -->
 <template>
-  <div class="Index">
+  <div class="Index" style="margin-top: 10px">
     <div v-if="current">
-      <el-select value="" placeholder="请选择" v-if="options && options.length">
-        <el-option
-          v-for="item in options"
-          :key="item.key"
-          :label="item.name"
-          :value="item.key"
+      <div
+        style="
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-bottom: 1px solid #eee;
+          padding-bottom: 8px;
+        "
+      >
+        <el-button type="success" @click="handleCreateAction()" size="mini"
+          >添加</el-button
         >
-        </el-option>
-      </el-select>
+      </div>
+      <div
+        v-for="action in current.actions"
+        :key="action.key"
+        style="padding: 10px; margin-bottom: 12px"
+      >
+        <div
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 8px;
+          "
+        >
+          <span>{{ action.name }}</span>
+          <div>
+            <el-button
+              type="primary"
+              @click="handleEditAction(action)"
+              size="mini"
+              >编辑</el-button
+            >
+            <el-button
+              type="danger"
+              @click="handleRemoveAction(action)"
+              size="mini"
+              >删除</el-button
+            >
+          </div>
+        </div>
+        <div
+          v-for="(handle, index) in action.handle"
+          :key="handle.key"
+          style="
+            padding: 6px 10px;
+            border: 1px solid #eee;
+            margin-top: 8px;
+            color: #878769;
+            font-size: 14px;
+          "
+        >
+          <div>{{ index + 1 }}. {{ handle.name }}</div>
+        </div>
+      </div>
+      <div
+        class="formAction"
+        style="
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding-bottom: 8px;
+        "
+      >
+        <el-button size="mini" @click="handleClose">取消</el-button>
+      </div>
     </div>
     <div v-else>
       <!-- 全局 事件 列表 -->
@@ -65,7 +124,7 @@
             filterable
           >
             <el-option
-              v-for="item in options"
+              v-for="item in optionalOptions"
               :key="item.key"
               :label="item.name"
               :value="item.key"
@@ -112,13 +171,21 @@
             <el-button
               type="warning"
               size="mini"
-              @click="form.handle.shift(index, 1)"
+              @click="handleRemoveActionHandle(index)"
               >移除</el-button
             >
           </div>
         </div>
         <div style="text-align: center">
-          <el-button type="primary" size="mini" @click="form.handle.push({})"
+          <el-button
+            type="primary"
+            size="mini"
+            @click="
+              form.handle.push({
+                name: '',
+                link: [],
+              })
+            "
             >添加</el-button
           >
         </div>
@@ -140,8 +207,10 @@ import { Component, Vue, Provide, Watch } from 'vue-property-decorator';
 import { Getter, State } from 'vuex-class';
 
 import components from '../common'
+import { generateUUID } from '@/utils';
 
 let flatElementsWatchTimer = -1;
+let currentWatchTimer = -1;
 
 @Component({
   name: 'low-actions',
@@ -165,9 +234,22 @@ export default class LowActions extends Vue {
     return Object.values(this.actions || {});
   }
 
-  visible = true;
+  visible = false;
 
   options: any[] = [];
+
+  get optionalOptions () {
+    const actions = this.current?.actions;
+    if (!actions) {
+      return this.options;
+    }
+    if ((this.form as any).key) {
+      return this.options;
+    }
+    return this.options.filter(item => {
+      return !actions.find(action => action.event === item.key)
+    });
+  }
 
   form = {
     name: '',
@@ -175,7 +257,7 @@ export default class LowActions extends Vue {
     handle: [
       {
         name: '',
-        link: '',
+        link: [],
       }
     ]
   };
@@ -201,9 +283,20 @@ export default class LowActions extends Vue {
       this.initLinkOptions();
     }, 300);
   }
+  @Watch('current')
+  currentWatch () {
+    clearTimeout(currentWatchTimer);
+    currentWatchTimer = setTimeout(() => {
+      this.initActionOptions();
+    }, 300);
+  }
 
   created () {
     this.initLinkOptions();
+    this.initActionOptions();
+  }
+
+  initActionOptions () {
     const element = this.current?.element;
     if (!element) return;
     const component = components.find(item => item.name === element)
@@ -249,11 +342,93 @@ export default class LowActions extends Vue {
       }];
     }
   }
+  handleCreateAction () {
+
+    this.form = {
+      name: '',
+      event: '',
+      handle: [
+        {
+          name: '',
+          link: []
+        }
+      ]
+    };
+    this.$nextTick(() => {
+      if (!this.optionalOptions.length) {
+        this.$message.warning('组件上没有可用的动作了');
+        return;
+      }
+      this.visible = true;
+    });
+  }
   handleSaveOrEdit () {
     (this.$refs['form'] as any).validate((valid: boolean) => {
       if (!valid) return false;
-      console.log(this.form);
+      const form = cloneDeep(this.form as any);
+      if (!form.handle || !form.handle.length) {
+        return this.$message.warning("至少要添加一个具体动作");
+      }
+      const isEdit = form.key;
+      if (!form.key) {
+        form.key = generateUUID();
+      }
+      form.handle = form.handle.map((item: any) => {
+        const [type, namespace, key] = item.link;
+        item.link = `${type}_${namespace}.${key}`;
+        if (!item.key) {
+          item.key = generateUUID();
+        }
+        return item;
+      });
+      const actions: LowElementAction = form;
+      if (this.current) {
+        if (!this.current.actions) {
+          this.current.actions = [];
+        }
+        if (isEdit) {
+          const index = this.current.actions.findIndex((item) => item.key === form.key);
+          this.current.actions.splice(index, 1, actions);
+        } else {
+          this.current.actions.push(actions);
+        }
+      }
+      this.visible = false;
     });
+  }
+
+  handleEditAction (action: any) {
+    const cloneAction = cloneDeep(action);
+
+    cloneAction.handle = cloneAction.handle.map((item: any) => {
+      const [location, key] = item.link.split('.');
+      const [type, namespace] = location.split('_');
+      item.link = [type, namespace, key];
+      return item;
+    });
+
+    this.form = cloneAction;
+    this.visible = true;
+  }
+
+  handleRemoveAction (action: any) {
+    if (!this.current) return;
+    const index = this.current?.actions?.findIndex(item => {
+      return item.key === action.key;
+    });
+    if (typeof index === 'undefined') return;
+
+    this.current?.actions?.splice(index, 1);
+  }
+
+  handleRemoveActionHandle (index: number) {
+    console.log('index', index);
+    // this.current?.actions?.splice(index, 1);
+    this.form.handle.splice(index, 1);
+  }
+
+  handleClose () {
+    this.$store.commit("SET_CURRENT", undefined);
   }
 }
 </script>
