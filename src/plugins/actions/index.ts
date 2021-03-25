@@ -2,7 +2,7 @@
  * @Author: bucai
  * @Date: 2021-03-22 20:59:50
  * @LastEditors: bucai
- * @LastEditTime: 2021-03-23 20:16:48
+ * @LastEditTime: 2021-03-25 15:38:33
  * @Description:
  */
 import Vue from 'vue';
@@ -16,11 +16,11 @@ import { LowElement } from '@/types/Element';
 export default (store: Store<any>) => {
   const state = store.state;
 
-  const execHandle = async (handle: any) => {
+  const execHandle = async (handle: any, options: unknown = {}) => {
     const { link, data, key } = handle;
     const [type, typeKey, handleKey] = link.split(/_|\./);
     if (type === 'global') {
-      return fetch(store, link);
+      return fetch(store, link, options);
     } else if (type === 'element') {
       // 1. 找到element
       // 2. 获取exec
@@ -31,14 +31,14 @@ export default (store: Store<any>) => {
         throw new Error('element not found');
       }
       const actions = (element as LowElement).actions;
-      return execAction(actions);
+      return execAction(actions, options);
     }
   };
 
-  const execAction = async (action: any) => {
+  const execAction = async (action: any, options: unknown = {}) => {
     for (let i = 0; i < action.handle.length; i++) {
       const handle = action.handle[i];
-      await execHandle(handle);
+      await execHandle(handle, options);
     }
   };
 

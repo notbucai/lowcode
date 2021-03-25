@@ -41,7 +41,9 @@ export default {
       if (!this.actions) return;
       const clickAction = this.actions.find(item => item.event === 'click');
       if (clickAction) {
-        await this.$actions(clickAction);
+        await this.$actions(clickAction, {
+          index: this.tableRowScopeData ? this.tableRowScopeData.$index : undefined
+        });
       }
       const submitAction = this.actions.find(item => item.event === 'submit');
       if (submitAction) {

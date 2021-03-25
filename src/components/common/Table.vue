@@ -21,8 +21,14 @@
 </template>
 
 <script>
+import { getDataByModel } from '@/utils/page';
 import TableColumnAction from './TableColumnAction';
+import { mapState } from 'vuex';
 export default {
+  modelOptions: [{
+    key: 'data',
+    name: '数据列表',
+  }],
   components: {
     TableColumnAction
   },
@@ -32,10 +38,21 @@ export default {
       default () {
         return [];
       }
+    },
+    models: {
+      type: Object
     }
   },
   computed: {
+    ...mapState({
+      pageData (state) {
+        return state.page.data
+      }
+    }),
     data () {
+      if (this.models && this.models.data) {
+        return getDataByModel(this.pageData, this.models.data);
+      }
       return [this.columns.reduce((pv, cv) => {
         pv[cv.id] = cv.label;
         return pv;

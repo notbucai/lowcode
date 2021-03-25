@@ -110,10 +110,6 @@ export default class PageStore extends VuexModule {
     * 动作
     */
    _actions: any = {
-      dialog: {
-         name: "对话框",
-         handle: []
-      },
       fetch: {
          name: "接口请求",
          actions: [
@@ -125,8 +121,21 @@ export default class PageStore extends VuexModule {
                   bind: 'model_1a52926d55f3',
                   recv: 'model_2345423.token'
                }
+            },
+            {
+               key: 'action_sjy723nju431sew234d',
+               name: "删除单个用户",
+               handle: 'POST[/api/table/delete]',
+               data: {
+                  bind: 'model_123midn3u1s.list.$[index]',
+                  replace: ['index']
+               }
             }
          ]
+      },
+      dialog: {
+         name: "对话框",
+         handle: []
       }
    }
 
@@ -136,6 +145,20 @@ export default class PageStore extends VuexModule {
    @Action
    init () {
       this.context.commit('CLEAR_MODELS');
+
+      this.context.commit('ADD_MODEL', {
+         name: "Token", // 数据源名称
+         key: 'model_2345423', // 绑定的字段 该字段创建的时候生成
+         // 实体
+         entitys: [
+            {
+               key: 'token', // 绑定的字段 输入
+               name: "token", // 实体名称 输入
+               type: 'string', // 数据类型 选择
+               value: '""', // 默认值 输入
+            },
+         ]
+      });
 
       this.context.commit('ADD_MODEL', {
          name: "登录表单", // 数据源名称
@@ -158,19 +181,6 @@ export default class PageStore extends VuexModule {
          ]
       })
       this.context.commit('ADD_MODEL', {
-         name: "Token", // 数据源名称
-         key: 'model_2345423', // 绑定的字段 该字段创建的时候生成
-         // 实体
-         entitys: [
-            {
-               key: 'token', // 绑定的字段 输入
-               name: "token", // 实体名称 输入
-               type: 'string', // 数据类型 选择
-               value: '""', // 默认值 输入
-            },
-         ]
-      });
-      this.context.commit('ADD_MODEL', {
          name: '登录规则',
          key: 'rules',
          entitys: [
@@ -185,6 +195,25 @@ export default class PageStore extends VuexModule {
                name: '密码规则',
                value: JSON.stringify([{ required: true, message: '请选择', trigger: 'blur' }]),
                type: 'object'
+            }
+         ]
+      });
+
+      this.context.commit('ADD_MODEL', {
+         name: '用户列表',
+         key: 'model_123midn3u1s',
+         entitys: [
+            {
+               key: 'list',
+               name: '列表',
+               value: JSON.stringify([{ id: 12, name: '123' }, { id: 12, name: '333' }]),
+               type: 'array'
+            },
+            {
+               key: 'total',
+               name: '数量',
+               value: JSON.stringify(2),
+               type: 'number'
             }
          ]
       });
