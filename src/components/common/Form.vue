@@ -17,6 +17,12 @@ export default {
     name: '规则',
   }],
 
+  provide () {
+    return {
+      formCompoent: this
+    }
+  },
+
   computed: {
     ...mapState({
       data (state) {
@@ -31,13 +37,23 @@ export default {
     },
     rules () {
       if (this.models && this.models.rules) {
+
         return getDataByModel(this.data, this.models.rules);
       }
       return undefined;
     }
   },
   methods: {
-
+    submit () {
+      return new Promise((resolve, reject) => {
+        this.$refs['formEl'].validate(async valid => {
+          if (valid) {
+            return resolve();
+          }
+          reject();
+        })
+      })
+    }
   }
 
 }

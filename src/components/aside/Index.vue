@@ -354,6 +354,24 @@ export default class LowAside extends Vue {
                     },
                   ]
                 },
+                {
+                  "element": "form-item", // 元素名称 or 类型
+                  "type": "container", // container or element
+                  disabled: true,
+                  props: {
+                    label: "表单项"
+                  },
+                  children: [
+                    {
+                      disabled: true,
+                      "element": "button", // 元素名称 or 类型
+                      "type": "element", // container or element
+                      props: {
+                        text: "按钮",
+                      },
+                    },
+                  ]
+                },
               ]
             },
           ]

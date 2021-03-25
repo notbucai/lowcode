@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" v-if="!refresh">
     <el-container class="layout">
       <el-header height="50px">
         <div class="layout-header">
@@ -97,7 +97,7 @@ export default class App extends Vue {
   private created () {
     this.$store.commit('UPDATE');
     this.$store.dispatch('page/init');
-    localStorage.removeItem('preview');
+    // localStorage.removeItem('preview');
     //
     tinykeys(window, {
       "$mod+z": () => {
@@ -115,6 +115,8 @@ export default class App extends Vue {
       }
     })
   }
+
+  refresh: boolean = false;
 
   isMove: boolean = false;
   currentId: string | number | null = null;
@@ -134,7 +136,7 @@ export default class App extends Vue {
   }
 
 
-  show: boolean = false;
+  show: boolean = !!localStorage.getItem('preview');;
 
   code: string = '';
 
@@ -144,6 +146,12 @@ export default class App extends Vue {
     this.show = !this.show;
     if (this.show) {
       localStorage.setItem('preview', 'true');
+      // 直接整体更新一下sotre 同时强制更新一下更新视图
+      this.$store.dispatch("refresh")
+      this.refresh = true;
+      this.$nextTick(() => {
+        this.refresh = false;
+      })
     } else {
       localStorage.removeItem('preview');
     }

@@ -21,18 +21,36 @@ export default {
     }
   ],
 
-  inject: [],
+  inject: {
+    tableRowScopeData: {
+      from: 'tableRowScopeData',
+      default: undefined
+    },
+    formCompoent: {
+      from: 'formCompoent',
+      default: undefined
+    },
+  },
 
   methods: {
-    handleClick (e) {
+    async handleClick (e) {
       // 检测一下是否在编辑状态
       const preview = localStorage.getItem('preview')
       if (!preview) return;
       // 获取
       if (!this.actions) return;
-      const action = this.actions.find(item => item.event === 'click');
-      if (!action) return;
-      this.$actions(action);
+      const clickAction = this.actions.find(item => item.event === 'click');
+      if (clickAction) {
+        await this.$actions(clickAction);
+      }
+      const submitAction = this.actions.find(item => item.event === 'submit');
+      if (submitAction) {
+        // 检测一下表单
+        if (!this.formCompoent) throw new Error("出现问题，没有在父组件中找到表单");
+        await this.formCompoent.submit()
+        await this.$actions(submitAction);
+      }
+
     }
   }
 

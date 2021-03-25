@@ -5,6 +5,24 @@ import { getFinderFunctionByChildKeyFromTree } from '@/utils'
 import Vue from 'vue'
 import Vuex from 'vuex'
 import PageStore from './modules/Page';
+import { cloneDeep } from 'lodash'
+
+import lowdb from 'lowdb';
+
+import LocalStorage from 'lowdb/adapters/LocalStorage'
+
+const adapter = new LocalStorage('db')
+const db = lowdb(adapter)
+
+db.defaults({
+  elements: {
+    "id": "c6174605-fb74-4fcb-884e-1a52926d55f3",
+    "element": "layout", // 元素名称 or 类型
+    "type": "container", // container or element
+    "children": []
+  }
+})
+  .write()
 
 const history = new History();
 
@@ -26,18 +44,13 @@ type StateType = {
   elements: LowElement;
 }
 
-export default new Vuex.Store<StateType>({
+const store = new Vuex.Store<StateType>({
   modules: {
     page: PageStore
   },
   state: {
     currentId: undefined,
-    elements: {
-      "id": "c6174605-fb74-4fcb-884e-1a52926d55f3",
-      "element": "layout", // 元素名称 or 类型
-      "type": "container", // container or element
-      "children": []
-    }
+    elements: db.get('elements').value()
   },
   getters: {
     current (state) {
@@ -113,9 +126,20 @@ export default new Vuex.Store<StateType>({
           parent.children.splice(index, 1);
         }
       }
+    },
+    REFRESH_ELEMENTS (state) {
+      state.elements = cloneDeep(state.elements);
     }
   },
   actions: {
-
+    refresh ({ commit }) {
+      commit('REFRESH_ELEMENTS');
+    }
   },
-})
+});
+
+store.subscribe((mutation, state) => {
+  db.set('elements', state.elements).write();
+});
+
+export default store;
