@@ -47,37 +47,9 @@
         </div>
       </el-scrollbar>
     </div>
-    <!-- 数据源相关 -->
+    <!-- 数据源 -->
     <div class="aside-handle" v-if="activeAction == 'models'">
-      <el-scrollbar class="aside-scrollbar">
-        <el-collapse v-show="!current">
-          <el-collapse-item
-            :title="item.name"
-            :name="item.name"
-            v-for="item in models"
-            :key="item.key"
-          >
-            <div
-              class="low-model-item"
-              v-for="entity in item.entitys"
-              :key="entity.key"
-            >
-              <pre
-                style="font-size: 12px; line-height: 1.4; padding: 4px 10px"
-                >{{ JSON.stringify(entity, null, 2) }}</pre
-              >
-            </div>
-          </el-collapse-item>
-        </el-collapse>
-        <!-- 配置页 -->
-        <div v-if="current">
-          <!-- <component
-            :is="'bc-' + current.element + '-model'"
-            :element="current"
-          ></component> -->
-          <low-model />
-        </div>
-      </el-scrollbar>
+      <low-model />
     </div>
     <!-- 数据源相关 -->
     <div class="aside-handle" v-if="activeAction == 'actions'">

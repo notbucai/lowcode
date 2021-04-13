@@ -3,6 +3,7 @@
  */
 import { VuexModule, Module, Mutation, Action } from 'vuex-module-decorators';
 import router from '@/router';
+import db from '@/plugins/db';
 
 export type TypeType = {
    type: string;
@@ -26,7 +27,8 @@ export type ModelType = {
 @Module({
    namespaced: true,
 })
-export default class PageStore extends VuexModule {
+class PageStore extends VuexModule {
+
    /**
     * 数据类型
     */
@@ -145,121 +147,144 @@ export default class PageStore extends VuexModule {
    @Action
    init () {
       this.context.commit('CLEAR_MODELS');
+      // 自定义数据
 
-      this.context.commit('ADD_MODEL', {
-         name: "Token", // 数据源名称
-         key: 'model_2345423', // 绑定的字段 该字段创建的时候生成
-         // 实体
-         entitys: [
-            {
-               key: 'token', // 绑定的字段 输入
-               name: "token", // 实体名称 输入
-               type: 'string', // 数据类型 选择
-               value: '""', // 默认值 输入
-            },
-         ]
-      });
+      const models = db.get('models').value();
+      if (models && models.length) {
+         models.forEach((item: ModelType) => {
+            this.context.commit('ADD_MODEL', item);
+         });
+      } else {
 
-      this.context.commit('ADD_MODEL', {
-         name: "登录表单", // 数据源名称
-         key: 'model_1a52926d55f3', // 绑定的字段 该字段创建的时候生成
-         // 实体
-         entitys: [
-            {
-               key: 'username', // 绑定的字段 输入
-               name: "用户名", // 实体名称 输入
-               type: 'string', // 数据类型 选择
-               value: '""', // 默认值 输入
-            },
-            {
-               key: 'password', // 绑定的字段 输入
-               name: "密码", // 实体名称 输入
-               type: 'string', // 数据类型 选择
-               value: '""', // 默认值 输入
-            },
-            // ...more
-         ]
-      })
-      this.context.commit('ADD_MODEL', {
-         name: '登录规则',
-         key: 'rules',
-         entitys: [
-            {
-               key: 'username',
-               name: '用户名规则',
-               value: JSON.stringify([{ required: true, message: '必填', trigger: 'blur' }]),
-               type: 'object'
-            },
-            {
-               key: 'password',
-               name: '密码规则',
-               value: JSON.stringify([{ required: true, message: '请选择', trigger: 'blur' }]),
-               type: 'object'
-            }
-         ]
-      });
+         this.context.commit('ADD_MODEL', {
+            name: "Token", // 数据源名称
+            key: 'model_2345423', // 绑定的字段 该字段创建的时候生成
+            // 实体
+            entitys: [
+               {
+                  key: 'token', // 绑定的字段 输入
+                  name: "token", // 实体名称 输入
+                  type: 'string', // 数据类型 选择
+                  value: '""', // 默认值 输入
+               },
+            ]
+         });
 
-      this.context.commit('ADD_MODEL', {
-         name: '用户列表',
-         key: 'model_123midn3u1s',
-         entitys: [
-            {
-               key: 'list',
-               name: '列表',
-               value: JSON.stringify([{ id: 12, name: '123' }, { id: 12, name: '333' }]),
-               type: 'array'
-            },
-            {
-               key: 'total',
-               name: '数量',
-               value: JSON.stringify(2),
-               type: 'number'
-            }
-         ]
-      });
-
-      const { params, query } = router.currentRoute;
-
-      this.context.commit('ADD_MODEL', {
-         name: '页面PAREMS参数',
-         key: 'parems',
-         entitys: Object.keys(params).map(key => {
-            return {
-               key: key,
-               name: key,
-               value: JSON.stringify(params[key]),
-               type: 'string'
-            }
+         this.context.commit('ADD_MODEL', {
+            name: "登录表单", // 数据源名称
+            key: 'model_1a52926d55f3', // 绑定的字段 该字段创建的时候生成
+            // 实体
+            entitys: [
+               {
+                  key: 'username', // 绑定的字段 输入
+                  name: "用户名", // 实体名称 输入
+                  type: 'string', // 数据类型 选择
+                  value: '""', // 默认值 输入
+               },
+               {
+                  key: 'password', // 绑定的字段 输入
+                  name: "密码", // 实体名称 输入
+                  type: 'string', // 数据类型 选择
+                  value: '""', // 默认值 输入
+               },
+               // ...more
+            ]
          })
-      });
+         this.context.commit('ADD_MODEL', {
+            name: '登录规则',
+            key: 'rules',
+            entitys: [
+               {
+                  key: 'username',
+                  name: '用户名规则',
+                  value: JSON.stringify([{ required: true, message: '必填', trigger: 'blur' }]),
+                  type: 'object'
+               },
+               {
+                  key: 'password',
+                  name: '密码规则',
+                  value: JSON.stringify([{ required: true, message: '请选择', trigger: 'blur' }]),
+                  type: 'object'
+               }
+            ]
+         });
 
-      this.context.commit('ADD_MODEL', {
-         name: '页面QUEYR参数',
-         key: 'query',
-         entitys: Object.keys(query).map(key => {
-            return {
-               key: key,
-               name: key,
-               value: JSON.stringify(query[key]),
-               type: 'string'
-            }
-         })
-      });
+         this.context.commit('ADD_MODEL', {
+            name: '用户列表',
+            key: 'model_123midn3u1s',
+            entitys: [
+               {
+                  key: 'list',
+                  name: '列表',
+                  value: JSON.stringify([{ id: 1, name: '123' }, { id: 2, name: '333' }]),
+                  type: 'array'
+               },
+               {
+                  key: 'total',
+                  name: '数量',
+                  value: JSON.stringify(2),
+                  type: 'number'
+               }
+            ]
+         });
 
-      this.context.commit('ADD_MODEL', {
-         name: 'localStorage',
-         key: 'localStorage',
-         entitys: Array(localStorage.length).fill('').map((_, i) => localStorage.key(i)).filter(key => typeof key === 'string').map((key: string) => {
-            return {
-               key: key,
-               name: key,
-               value: JSON.stringify(localStorage.getItem(key)),
-               type: 'string'
-            }
-         })
-      });
+         const { params, query } = router.currentRoute;
 
+         this.context.commit('ADD_MODEL', {
+            name: '页面PAREMS参数',
+            key: 'parems',
+            entitys: Object.keys(params).map(key => {
+               return {
+                  key: key,
+                  name: key,
+                  value: JSON.stringify(params[key]),
+                  type: 'string'
+               }
+            })
+         });
+
+         this.context.commit('ADD_MODEL', {
+            name: '页面QUEYR参数',
+            key: 'query',
+            entitys: Object.keys(query).map(key => {
+               return {
+                  key: key,
+                  name: key,
+                  value: JSON.stringify(query[key]),
+                  type: 'string'
+               }
+            })
+         });
+
+         this.context.commit('ADD_MODEL', {
+            name: 'localStorage',
+            key: 'localStorage',
+            entitys: Array(localStorage.length).fill('').map((_, i) => localStorage.key(i)).filter(key => typeof key === 'string').map((key: string) => {
+               return {
+                  key: key,
+                  name: key,
+                  value: JSON.stringify(localStorage.getItem(key)),
+                  type: 'string'
+               }
+            })
+         });
+      }
    }
+
+   @Action
+   handleEditOrAddModel (payload: ModelType) {
+      const findModel = this.models.find(model => {
+         return model.key === payload.key;
+      });
+      console.log(findModel, 'payload', payload);
+
+      if (findModel) {
+         this.context.commit('UPDATE_MODEL', payload);
+      } else {
+         this.context.commit('ADD_MODEL', payload);
+      }
+   }
+
    /**
     * 清空数据
     */
@@ -292,6 +317,46 @@ export default class PageStore extends VuexModule {
          return pv;
       }, {});
       this.data = Object.assign({}, this.data);
+      db.set('models', this.models).write();
+   }
+   /**
+    * 更新模型
+    * @param model 模型
+    */
+   @Mutation
+   UPDATE_MODEL (model: ModelType) {
+      const index = this.models.findIndex(item => {
+         return item.key === model.key;
+      });
+      console.log('index', index);
+
+      if (index === -1) {
+         return;
+      }
+      // 修改模型
+      this.models.splice(index, 1, model);
+      // 生成数据
+      this.data[model.key] = model.entitys.reduce((pv: any, cv) => {
+         // 反序列数据
+         pv[cv.key] = JSON.parse(cv.value);
+         return pv;
+      }, {});
+      this.data = Object.assign({}, this.data);
+      db.set('models', this.models).write();
+   }
+   /**
+    * 删除模型
+    * @param model 模型
+    */
+   @Mutation
+   REMOVE_MODEL (key: string) {
+      const index = this.models.findIndex(item => {
+         return item.key === key;
+      });
+      this.models.splice(index, 1);
+      db.set('models', this.models).write();
    }
 
 }
+
+export default PageStore;

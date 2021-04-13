@@ -6,23 +6,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import PageStore from './modules/Page';
 import { cloneDeep } from 'lodash'
-
-import lowdb from 'lowdb';
-
-import LocalStorage from 'lowdb/adapters/LocalStorage'
-
-const adapter = new LocalStorage('db')
-const db = lowdb(adapter)
-
-db.defaults({
-  elements: {
-    "id": "c6174605-fb74-4fcb-884e-1a52926d55f3",
-    "element": "layout", // 元素名称 or 类型
-    "type": "container", // container or element
-    "children": []
-  }
-})
-  .write()
+import db from '@/plugins/db'
 
 const history = new History();
 
@@ -139,6 +123,7 @@ const store = new Vuex.Store<StateType>({
 });
 
 store.subscribe((mutation, state) => {
+  console.log('state', state);
   db.set('elements', state.elements).write();
 });
 
