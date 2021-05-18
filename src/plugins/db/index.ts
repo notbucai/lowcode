@@ -2,7 +2,7 @@
  * @Author: bucai
  * @Date: 2021-04-13 11:17:31
  * @LastEditors: bucai
- * @LastEditTime: 2021-04-13 11:24:05
+ * @LastEditTime: 2021-05-18 19:10:55
  * @Description: 
  */
 
@@ -20,7 +20,8 @@ db.defaults({
     "type": "container", // container or element
     "children": []
   },
-  models: []
+  models: [],
+  actions: {}
 })
   .write()
 

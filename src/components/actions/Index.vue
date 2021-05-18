@@ -2,7 +2,7 @@
  * @Author: bucai
  * @Date: 2021-02-19 15:58:38
  * @LastEditors: bucai
- * @LastEditTime: 2021-03-23 23:08:10
+ * @LastEditTime: 2021-05-18 20:05:22
  * @Description:
 -->
 <template>
@@ -87,7 +87,11 @@
             v-for="key in actionsKeys"
             :key="key"
           >
-            <div
+            <component
+              :is="'action-' + key"
+              :actions="actions[key]"
+            ></component>
+            <!-- <div
               class="low-model-item"
               v-for="action in actions[key].actions"
               :key="action.key"
@@ -96,7 +100,7 @@
                 style="font-size: 12px; line-height: 1.4; padding: 4px 10px"
                 >{{ JSON.stringify(action, null, 2) }}</pre
               >
-            </div>
+            </div> -->
           </el-collapse-item>
         </el-collapse>
       </el-scrollbar>
@@ -209,11 +213,20 @@ import { Getter, State } from 'vuex-class';
 import components from '../common'
 import { generateUUID } from '@/utils';
 
+// action components
+import GlobalActionFetch from './components/GlobalActionFetch.vue';
+import GlobalActionDialog from './components/GlobalActionDialog.vue';
+
 let flatElementsWatchTimer = -1;
 let currentWatchTimer = -1;
 
+
 @Component({
   name: 'low-actions',
+  components: {
+    'action-fetch': GlobalActionFetch,
+    'action-dialog': GlobalActionDialog
+  }
 })
 export default class LowActions extends Vue {
 

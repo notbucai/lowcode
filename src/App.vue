@@ -132,7 +132,7 @@ export default class App extends Vue {
     return this.$store.state.elements;
   }
   set elements (val) {
-    console.log(1);
+    // console.log(1);
   }
 
 

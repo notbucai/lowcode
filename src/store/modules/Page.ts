@@ -112,33 +112,33 @@ class PageStore extends VuexModule {
     * 动作
     */
    _actions: any = {
-      fetch: {
-         name: "接口请求",
-         actions: [
-            {
-               key: 'action_efhj123sadufk235ur',
-               name: "登录",
-               handle: 'POST[/api/login]',
-               data: {
-                  bind: 'model_1a52926d55f3',
-                  recv: 'model_2345423.token'
-               }
-            },
-            {
-               key: 'action_sjy723nju431sew234d',
-               name: "删除单个用户",
-               handle: 'POST[/api/table/delete]',
-               data: {
-                  bind: 'model_123midn3u1s.list.$[index]',
-                  replace: ['index']
-               }
-            }
-         ]
-      },
-      dialog: {
-         name: "对话框",
-         handle: []
-      }
+      // fetch: {
+      //    name: "接口请求",
+      //    actions: [
+      //       {
+      //          key: 'action_efhj123sadufk235ur',
+      //          name: "登录",
+      //          handle: 'POST[/api/login]',
+      //          data: {
+      //             bind: 'model_1a52926d55f3',
+      //             recv: 'model_2345423.token'
+      //          }
+      //       },
+      //       {
+      //          key: 'action_sjy723nju431sew234d',
+      //          name: "删除单个用户",
+      //          handle: 'POST[/api/table/delete]',
+      //          data: {
+      //             bind: 'model_123midn3u1s.list.$[index]',
+      //             replace: ['index']
+      //          }
+      //       }
+      //    ]
+      // },
+      // dialog: {
+      //    name: "对话框",
+      //    handle: []
+      // }
    }
 
    /**
@@ -147,8 +147,10 @@ class PageStore extends VuexModule {
    @Action
    init () {
       this.context.commit('CLEAR_MODELS');
+      this.context.commit('INIT_ACTIONS');
       // 自定义数据
 
+      // 初始化示例models
       const models = db.get('models').value();
       if (models && models.length) {
          models.forEach((item: ModelType) => {
@@ -269,6 +271,63 @@ class PageStore extends VuexModule {
             })
          });
       }
+
+      // 初始化示例动作
+      const actions = db.get('actions').value();
+
+      if (actions && Object.keys(actions).length) {
+         Object.keys(actions).forEach((key: any) => {
+
+            actions[key].actions.forEach((aItem: any) => {
+               this.context.commit('UPDATE_ACTION', {
+                  type: key,
+                  key: aItem.key,
+                  data: aItem
+               });
+            });
+
+         });
+      } else {
+         Object.keys({
+            fetch: {
+               name: "接口请求",
+               actions: [
+                  {
+                     key: 'action_efhj123sadufk235ur',
+                     name: "登录",
+                     handle: 'POST[/api/login]',
+                     data: {
+                        bind: 'model_1a52926d55f3',
+                        recv: 'model_2345423.token'
+                     }
+                  },
+                  {
+                     key: 'action_sjy723nju431sew234d',
+                     name: "删除单个用户",
+                     handle: 'POST[/api/table/delete]',
+                     data: {
+                        bind: 'model_123midn3u1s.list.$[index]',
+                        replace: ['index']
+                     }
+                  }
+               ]
+            },
+            dialog: {
+               name: "对话框",
+               handle: []
+            }
+         }).forEach((key: any) => {
+            actions[key].actions.forEach((aItem: any) => {
+               this.context.commit('UPDATE_ACTION', {
+                  type: key,
+                  key: aItem.key,
+                  data: aItem
+               });
+            });
+         });
+
+      }
+
    }
 
    @Action
@@ -276,7 +335,6 @@ class PageStore extends VuexModule {
       const findModel = this.models.find(model => {
          return model.key === payload.key;
       });
-      console.log(findModel, 'payload', payload);
 
       if (findModel) {
          this.context.commit('UPDATE_MODEL', payload);
@@ -328,7 +386,6 @@ class PageStore extends VuexModule {
       const index = this.models.findIndex(item => {
          return item.key === model.key;
       });
-      console.log('index', index);
 
       if (index === -1) {
          return;
@@ -355,6 +412,53 @@ class PageStore extends VuexModule {
       });
       this.models.splice(index, 1);
       db.set('models', this.models).write();
+   }
+
+
+   @Mutation
+   INIT_ACTIONS () {
+
+      this._actions = {
+         fetch: {
+            name: '接口请求',
+            actions: []
+         },
+         dialog: {
+            name: '对话框',
+            actions: []
+         }
+      };
+   }
+
+   /**
+   * 删除动作
+   */
+   @Mutation
+   REMOVE_ACTION ({ type, key }: { type: string, key: string }) {
+      const index = this._actions[type].actions.findIndex((item: any) => {
+         return item.key == key;
+      });
+      this._actions[type].actions.splice(index, 1);
+      db.set('actions', this._actions).write();
+   }
+
+
+   /**
+   * 更新动作
+   */
+   @Mutation
+   UPDATE_ACTION ({ type, key, data }: {
+      type: string, key: string, data: object
+   }) {
+      const index = this._actions[type].actions.findIndex((item: any) => {
+         return item.key == key;
+      });
+      if (index === -1) {
+         this._actions[type].actions.push(data);
+      } else {
+         this._actions[type].actions.splice(index, 1, data);
+      }
+      db.set('actions', this._actions).write();
    }
 
 }
