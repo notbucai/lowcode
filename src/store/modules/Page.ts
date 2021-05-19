@@ -274,10 +274,9 @@ class PageStore extends VuexModule {
 
       // 初始化示例动作
       const actions = db.get('actions').value();
-
+      console.log('actions',actions);
       if (actions && Object.keys(actions).length) {
          Object.keys(actions).forEach((key: any) => {
-
             actions[key].actions.forEach((aItem: any) => {
                this.context.commit('UPDATE_ACTION', {
                   type: key,
@@ -288,7 +287,7 @@ class PageStore extends VuexModule {
 
          });
       } else {
-         Object.keys({
+         const _actions:any = {
             fetch: {
                name: "接口请求",
                actions: [
@@ -316,8 +315,10 @@ class PageStore extends VuexModule {
                name: "对话框",
                handle: []
             }
-         }).forEach((key: any) => {
-            actions[key].actions.forEach((aItem: any) => {
+         };
+         Object.keys(_actions).forEach((key: string) => {
+            
+            _actions[key].actions.forEach((aItem: any) => {
                this.context.commit('UPDATE_ACTION', {
                   type: key,
                   key: aItem.key,
