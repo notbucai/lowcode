@@ -12,6 +12,10 @@ import actions from './plugins/actions';
 
 Vue.config.productionTip = process.env.NODE_ENV !== 'production';
 
+if(process.env.NODE_ENV !== 'production'){
+  require('./mock');
+}
+
 // store.subscribe((mutation, state) => {
 //   console.log(mutation.type)
 //   console.log(mutation.payload)

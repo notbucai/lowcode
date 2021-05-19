@@ -25,6 +25,12 @@ import { getDataByModel } from '@/utils/page';
 import TableColumnAction from './TableColumnAction';
 import { mapState } from 'vuex';
 export default {
+  actioOptions: [
+    {
+      key: 'init',
+      name: '初始化',
+    }
+  ],
   modelOptions: [{
     key: 'data',
     name: '数据列表',
@@ -33,6 +39,7 @@ export default {
     TableColumnAction
   },
   props: {
+    actions: Array,
     columns: {
       type: Array,
       default () {
@@ -62,6 +69,23 @@ export default {
   data () {
     return {};
   },
+  mounted () {
+    this.init();
+  },
+  methods: {
+    async init () {
+      // 检测一下是否在编辑状态
+      const preview = localStorage.getItem('preview')
+      if (!preview) return;
+
+      if (!this.actions) return;
+      const initAction = this.actions.find(item => item.event === 'init');
+
+      if (initAction) {
+        await this.$actions(initAction, {});
+      }
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>
