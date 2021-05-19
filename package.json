@@ -44,6 +44,7 @@
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
     "git-cz": "^4.7.1",
+    "mocker-api": "^2.8.3",
     "mockjs": "^1.1.0",
     "sass": "^1.26.10",
     "sass-loader": "^10.0.1",

@@ -58,12 +58,14 @@ export default {
     }),
     data () {
       if (this.models && this.models.data) {
-        return getDataByModel(this.pageData, this.models.data);
+        const mList = getDataByModel(this.pageData, this.models.data);
+        return mList;
       }
-      return [this.columns.reduce((pv, cv) => {
+      const list = [this.columns.reduce((pv, cv) => {
         pv[cv.id] = cv.label;
         return pv;
       }, {})];
+      return list;
     }
   },
   data () {

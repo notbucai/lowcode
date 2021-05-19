@@ -173,6 +173,20 @@ class PageStore extends VuexModule {
          });
 
          this.context.commit('ADD_MODEL', {
+            name: "搜索", // 数据源名称
+            key: 'model_1a529333123sdf', // 绑定的字段 该字段创建的时候生成
+            // 实体
+            entitys: [
+               {
+                  key: 'name', // 绑定的字段 输入
+                  name: "用户名", // 实体名称 输入
+                  type: 'string', // 数据类型 选择
+                  value: '""', // 默认值 输入
+               },
+            ]
+         });
+
+         this.context.commit('ADD_MODEL', {
             name: "登录表单", // 数据源名称
             key: 'model_1a52926d55f3', // 绑定的字段 该字段创建的时候生成
             // 实体
@@ -274,7 +288,6 @@ class PageStore extends VuexModule {
 
       // 初始化示例动作
       const actions = db.get('actions').value();
-      console.log('actions',actions);
       if (actions && Object.keys(actions).length) {
          Object.keys(actions).forEach((key: any) => {
             actions[key].actions.forEach((aItem: any) => {
