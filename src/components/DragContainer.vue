@@ -47,7 +47,7 @@ import { generateUUID } from '@/utils';
 })
 export default class DragLayout extends Vue {
 
-  @State('currentId')
+  @State('currentId', { namespace: 'page' })
   current?: string;
 
   @Prop({
@@ -172,7 +172,7 @@ export default class DragLayout extends Vue {
     // this.active = !this.active;
     // 推送id
     if (!this.draggableOptions.clone) {
-      this.$store.commit('SET_CURRENT', element.id);
+      this.$store.commit('page/SET_CURRENT', element.id);
     }
   }
 

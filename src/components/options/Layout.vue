@@ -19,7 +19,7 @@ export default class Layout extends BaseOptions {
    * 取消
    */
   handleClose () {
-    this.$store.commit("SET_CURRENT", undefined);
+    this.$store.commit("page/SET_CURRENT", undefined);
   }
 }
 

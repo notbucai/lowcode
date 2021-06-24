@@ -2,8 +2,26 @@
  * @description 模型、类型 的值（默认值） 均为序列数据 需要反序列成对应类型数据
  */
 import { VuexModule, Module, Mutation, Action } from 'vuex-module-decorators';
+import { cloneDeep } from 'lodash'
+import { History } from 'stateshot'
+
 import router from '@/router';
 import db from '@/plugins/db';
+import { getFinderFunctionByChildKeyFromTree } from '@/utils'
+import { LowElement } from '@/types/Element';
+
+const history = new History();
+
+const flattenElementsDeep = (element: LowElement) => {
+   const arr = [element];
+
+   element.children?.forEach(item => {
+      const list = flattenElementsDeep(item);
+      arr.push(...list);
+   });
+
+   return arr;
+}
 
 export type TypeType = {
    type: string;
@@ -28,6 +46,15 @@ export type ModelType = {
    namespaced: true,
 })
 class PageStore extends VuexModule {
+
+   /**
+    * 页面当前选中id
+    */
+   currentId: string | undefined | null = undefined;
+   /**
+    * 页面当前元素列表
+    */
+   elements: LowElement = db.get('elements').value();
 
    /**
     * 数据类型
@@ -140,6 +167,35 @@ class PageStore extends VuexModule {
       //    handle: []
       // }
    }
+
+
+   // ---------------------------------------------
+   // -----------------getters--------------------
+   // ---------------------------------------------
+   /**
+    * 当前选择元素
+    */
+   get current () {
+      const state = this;
+      if (typeof state.currentId === 'string') {
+         const find = getFinderFunctionByChildKeyFromTree(state.elements);
+         const resData = find(state.currentId)
+         return Array.isArray(resData) ? resData[1] : resData;
+      }
+      return null;
+   }
+
+   /**
+    * 扁平后元素列表
+    */
+   get flatElements () {
+      const state = this;
+      return flattenElementsDeep(state.elements);
+   }
+
+   // ---------------------------------------------
+   // -----------------Action--------------------
+   // ---------------------------------------------
 
    /**
     * 初始化模型
@@ -300,7 +356,7 @@ class PageStore extends VuexModule {
 
          });
       } else {
-         const _actions:any = {
+         const _actions: any = {
             fetch: {
                name: "接口请求",
                actions: [
@@ -330,7 +386,7 @@ class PageStore extends VuexModule {
             }
          };
          Object.keys(_actions).forEach((key: string) => {
-            
+
             _actions[key].actions.forEach((aItem: any) => {
                this.context.commit('UPDATE_ACTION', {
                   type: key,
@@ -344,6 +400,26 @@ class PageStore extends VuexModule {
 
    }
 
+   /**
+    * 刷新
+    */
+   @Action
+   refresh () {
+      this.context.commit('REFRESH_ELEMENTS');
+   }
+   /**
+    * 清空画布
+    */
+   @Action
+   clear_canvas () {
+      this.context.commit('CLEAR_ELEMENTS')
+      this.context.commit('CLEAR_MODELS')
+   }
+
+   /**
+    * 编辑或添加模型
+    * @param payload 
+    */
    @Action
    handleEditOrAddModel (payload: ModelType) {
       const findModel = this.models.find(model => {
@@ -355,6 +431,122 @@ class PageStore extends VuexModule {
       } else {
          this.context.commit('ADD_MODEL', payload);
       }
+   }
+
+   // ---------------------------------------------
+   // -----------------Mutation--------------------
+   // ---------------------------------------------
+   /**
+    * 清除元素
+    */
+   @Mutation
+   CLEAR_ELEMENTS () {
+      const state = this;
+      state.elements = {
+         "id": "c6174605-fb74-4fcb-884e-1a52926d55f3",
+         "element": "layout", // 元素名称 or 类型
+         "type": "container", // container or element
+         "children": []
+      };
+   }
+   /**
+    * 更新历史
+    */
+   @Mutation
+   UPDATE () {
+      const state = this;
+      // 添加到历史
+      // console.log('history', history.get());
+      history.pushSync(state.elements);
+      // console.log('history', history.get());
+
+   }
+   /**
+    * 撤回
+    */
+   @Mutation
+   UNDO () {
+      this.elements = history.undo().get();
+   }
+   /**
+    * 取消撤回（反相撤回）
+    */
+   @Mutation
+   REDO () {
+      this.elements = history.redo().get();
+   }
+   /**
+    * 设置当前元素
+    * @param payload 
+    */
+   @Mutation
+   SET_CURRENT (payload: string) {
+      this.currentId = payload;
+   }
+   /**
+    * 绑定模型
+    * @param payload 
+    */
+   @Mutation
+   BIND_MODELS (payload: any) {
+      if (typeof this.currentId !== 'string') return;
+      const find = getFinderFunctionByChildKeyFromTree(this.elements);
+      let [parent, current] = find(this.currentId);
+
+      if (current) {
+         current = current as LowElement;
+         current.models = payload;
+      }
+   }
+   /**
+    * 更新当前选中元素的参数
+    * @param payload 
+    */
+   @Mutation
+   UPDATE_CURRENT_PROPS (payload: any) {
+      if (typeof this.currentId !== 'string') return;
+      const find = getFinderFunctionByChildKeyFromTree(this.elements);
+      let [parent, current, index] = find(this.currentId);
+      if (current) {
+         current = current as LowElement;
+         parent = parent as LowElement;
+         // index = index as number;
+
+         current.props = payload;
+         // const id = current.id;
+         // TODO: 这里有问题
+         // if (parent && Array.isArray(parent.children)) {
+         //   // index = parent.children.findIndex(item => item.id === id)
+         //   // parent.children.splice(index, 1, current);
+         // }
+      }
+   }
+   /**
+    * 移除当前元素
+    */
+   @Mutation
+   REMOVE_CURRENT () {
+      if (typeof this.currentId !== 'string') return;
+      const find = getFinderFunctionByChildKeyFromTree(this.elements);
+      let [parent, current, index] = find(this.currentId);
+      if (current) {
+         current = current as LowElement;
+         parent = parent as LowElement;
+         // index = index as number;
+         const id = current.id;
+
+         if (parent && Array.isArray(parent.children)) {
+            index = parent.children.findIndex(item => item.id === id)
+            parent.children.splice(index, 1);
+         }
+      }
+   }
+   /**
+    * 刷新缓存
+    */
+   @Mutation
+   REFRESH_ELEMENTS () {
+      this.elements = cloneDeep(this.elements);
    }
 
    /**

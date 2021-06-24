@@ -105,7 +105,7 @@ export default class Tag extends BaseOptions {
     this.handleUpdate();
   }
   handleUpdate () {
-    this.$store.commit('UPDATE_CURRENT_PROPS', { ...this.form });
+    this.$store.commit('page/UPDATE_CURRENT_PROPS', { ...this.form });
   }
   onSubmit () {
 
@@ -114,12 +114,12 @@ export default class Tag extends BaseOptions {
    * 取消
    */
   handleClose () {
-    this.$store.commit("SET_CURRENT", undefined);
+    this.$store.commit("page/SET_CURRENT", undefined);
   }
 
   handleRemove () {
-    this.$store.commit("REMOVE_CURRENT");
-    this.$store.commit("SET_CURRENT", undefined);
+    this.$store.commit("page/REMOVE_CURRENT");
+    this.$store.commit("page/SET_CURRENT", undefined);
   }
 }
 

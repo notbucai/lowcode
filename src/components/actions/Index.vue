@@ -2,7 +2,7 @@
  * @Author: bucai
  * @Date: 2021-02-19 15:58:38
  * @LastEditors: bucai
- * @LastEditTime: 2021-05-18 20:05:22
+ * @LastEditTime: 2021-06-24 15:29:51
  * @Description:
 -->
 <template>
@@ -230,13 +230,13 @@ let currentWatchTimer = -1;
 })
 export default class LowActions extends Vue {
 
-  @Getter('current')
+  @Getter('current',{ namespace: 'page' })
   current?: LowElement;
 
-  @Getter('flatElements')
+  @Getter('flatElements',{ namespace: 'page' })
   flatElements?: LowElement[];
 
-  @State('elements')
+  @State('elements',{ namespace: 'page' })
   elements?: LowElement;
 
   @State('_actions', { namespace: 'page' })
@@ -446,7 +446,7 @@ export default class LowActions extends Vue {
   }
 
   handleClose () {
-    this.$store.commit("SET_CURRENT", undefined);
+    this.$store.commit("page/SET_CURRENT", undefined);
   }
 
   hasElementExistParentsByElement (element: string) {

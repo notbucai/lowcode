@@ -103,23 +103,23 @@ Vue.use(Clipboard);
 export default class App extends Vue {
 
   private created () {
-    this.$store.commit('UPDATE');
+    this.$store.commit('page/UPDATE');
     this.$store.dispatch('page/init');
     // localStorage.removeItem('preview');
     //
     tinykeys(window, {
       "$mod+z": () => {
-        this.$store.commit('UNDO');
+        this.$store.commit('page/UNDO');
       },
       "$mod+Shift+z": () => {
         // 反撤回
-        this.$store.commit('REDO');
+        this.$store.commit('page/REDO');
       },
       "$mod+d": event => {
         event.preventDefault()
-        if (typeof this.$store.state.currentId === 'undefined') return;
-        this.$store.commit("REMOVE_CURRENT");
-        this.$store.commit("SET_CURRENT", undefined);
+        if (typeof this.$store.state.page.currentId === 'undefined') return;
+        this.$store.commit("page/REMOVE_CURRENT");
+        this.$store.commit("page/SET_CURRENT", undefined);
       }
     })
   }
@@ -137,10 +137,11 @@ export default class App extends Vue {
   // }
 
   get elements () {
-    return this.$store.state.elements;
+    console.log('elements',this.$store.state.page);
+    
+    return this.$store.state.page.elements;
   }
   set elements (val) {
-    // console.log(1);
   }
 
 
@@ -155,7 +156,7 @@ export default class App extends Vue {
     if (this.show) {
       localStorage.setItem('preview', 'true');
       // 直接整体更新一下sotre 同时强制更新一下更新视图
-      this.$store.dispatch("refresh")
+      this.$store.dispatch("page/refresh")
       this.refresh = true;
       this.$nextTick(() => {
         this.refresh = false;
@@ -166,7 +167,7 @@ export default class App extends Vue {
   }
   async handleClearCanvas () {
     await this.$confirm(`是否确认清除画布？`);
-    await this.$store.dispatch('clear_canvas');
+    await this.$store.dispatch('page/clear_canvas');
     this.$notify.success('清除成功');
   }
   handleShowCodeData () {
@@ -193,7 +194,7 @@ export default class App extends Vue {
 
       return element;
     }
-    const code = prettier.format(generate(this.$store.state.elements), {
+    const code = prettier.format(generate(this.$store.state.page.elements), {
       parser: "html",
       plugins: [parserHtml],
     });

@@ -65,7 +65,7 @@ import LowActions from '@/components/actions/Index.vue'
 import { Component, Vue, Provide } from 'vue-property-decorator';
 import { Getter, State } from 'vuex-class';
 import { LowElement } from '@/types/Element';
-import { ModelType } from '@/store/modules/Page';
+import { ModelType } from '@/store/modules/page';
 @Component({
   name: 'low-aside',
   components: {
@@ -80,10 +80,10 @@ export default class LowAside extends Vue {
   @State('models', { namespace: 'page' })
   models?: ModelType[];
 
-  @State('currentId')
+  @State('currentId',{ namespace: 'page' })
   currentId?: string;
 
-  @Getter('current')
+  @Getter('current',{ namespace: 'page' })
   current?: LowElement;
 
   @Provide('draggableOptions')

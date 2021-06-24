@@ -20,7 +20,9 @@ export default {
         return '';
       },
       set (value) {
-        setDataByModel(this.data, this.models.value, value);
+        if (this.models && this.models.value) {
+          setDataByModel(this.data, this.models.value, value);
+        }
       }
     },
     ...mapState({

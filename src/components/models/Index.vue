@@ -211,7 +211,7 @@
 import { Component, Vue, Provide, Watch } from 'vue-property-decorator';
 import { Getter, State } from 'vuex-class';
 import { LowElement } from '@/types/Element';
-import { ModelType, TypeType } from '@/store/modules/Page';
+import { ModelType, TypeType } from '@/store/modules/page';
 import { modelConfig } from '@/components/common/index';
 import { cloneDeep } from 'lodash'
 import { generateUUID } from '@/utils';
@@ -239,10 +239,10 @@ export default class LowModel extends Vue {
   @State('types', { namespace: 'page' })
   modelTypes?: TypeType[];
 
-  @State('currentId')
+  @State('currentId',{ namespace: 'page' })
   currentId?: string;
 
-  @Getter('current')
+  @Getter('current',{ namespace: 'page' })
   current?: LowElement;
 
   @Watch('currentId')
@@ -296,11 +296,11 @@ export default class LowModel extends Vue {
       pv[key] = (formModels[key] || []).join('.');
       return pv;
     }, {});
-    this.$store.commit("BIND_MODELS", models);
+    this.$store.commit("page/BIND_MODELS", models);
     this.onClose();
   }
   onClose () {
-    this.$store.commit("SET_CURRENT", undefined);
+    this.$store.commit("page/SET_CURRENT", undefined);
   }
 
   handleDeleteItemModel (data: ModelType) {
