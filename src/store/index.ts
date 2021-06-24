@@ -58,6 +58,14 @@ const store = new Vuex.Store<StateType>({
       // console.log('history', history.get());
 
     },
+    CLEAR_ELEMENTS (state) {
+      state.elements = {
+        "id": "c6174605-fb74-4fcb-884e-1a52926d55f3",
+        "element": "layout", // 元素名称 or 类型
+        "type": "container", // container or element
+        "children": []
+      };
+    },
     UNDO (state) {
       state.elements = history.undo().get();
     },
@@ -118,6 +126,10 @@ const store = new Vuex.Store<StateType>({
   actions: {
     refresh ({ commit }) {
       commit('REFRESH_ELEMENTS');
+    },
+    clear_canvas ({commit}) {
+      commit('CLEAR_ELEMENTS')
+      commit('page/CLEAR_MODELS')
     }
   },
 });

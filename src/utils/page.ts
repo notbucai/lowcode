@@ -1,5 +1,7 @@
 export const getDataByModel = (data: any, key: string) => {
+  if (!data) return undefined;
   return key.split('.').reduce((pv, key) => {
+    if (!pv) return undefined;
     return pv[key];
   }, data);
 }

@@ -364,6 +364,7 @@ class PageStore extends VuexModule {
    CLEAR_MODELS () {
       this.models = [];
       this.data = {};
+      this._actions = [];
    }
 
    /**

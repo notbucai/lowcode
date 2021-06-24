@@ -22,6 +22,14 @@
               circle
               @click="handleChangeShow"
             ></el-button>
+            <el-button
+              type="danger"
+              size="mini"
+              icon="el-icon-refresh"
+              plain
+              circle
+              @click="handleClearCanvas"
+            ></el-button>
           </div>
         </div>
       </el-header>
@@ -156,7 +164,11 @@ export default class App extends Vue {
       localStorage.removeItem('preview');
     }
   }
-
+  async handleClearCanvas () {
+    await this.$confirm(`是否确认清除画布？`);
+    await this.$store.dispatch('clear_canvas');
+    this.$notify.success('清除成功');
+  }
   handleShowCodeData () {
     function generate (item: LowElement) {
       const props = item.props || {};
