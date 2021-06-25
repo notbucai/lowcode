@@ -2,7 +2,7 @@
  * @Author: bucai
  * @Date: 2021-02-19 15:58:38
  * @LastEditors: bucai
- * @LastEditTime: 2021-06-24 15:29:51
+ * @LastEditTime: 2021-06-25 16:34:21
  * @Description:
 -->
 <template>
@@ -217,7 +217,7 @@ import { generateUUID } from '@/utils';
 import GlobalActionFetch from './components/GlobalActionFetch.vue';
 import GlobalActionDialog from './components/GlobalActionDialog.vue';
 
-let flatElementsWatchTimer = -1;
+let initLinkOptionsWatchTimer = -1;
 let currentWatchTimer = -1;
 
 
@@ -230,16 +230,16 @@ let currentWatchTimer = -1;
 })
 export default class LowActions extends Vue {
 
-  @Getter('current',{ namespace: 'page' })
+  @Getter('current', { namespace: 'page' })
   current?: LowElement;
 
-  @Getter('flatElements',{ namespace: 'page' })
+  @Getter('flatElements', { namespace: 'page' })
   flatElements?: LowElement[];
 
-  @State('elements',{ namespace: 'page' })
+  @State('elements', { namespace: 'page' })
   elements?: LowElement;
 
-  @State('_actions', { namespace: 'page' })
+  @State('globalActions')
   actions?: any;
 
   get actionsKeys () {
@@ -292,13 +292,15 @@ export default class LowActions extends Vue {
 
   linkOptions: any[] = [];
 
-  @Watch('flatElements')
+  @Watch('actions', { deep: true })
   flatElementsWatch () {
-    clearTimeout(flatElementsWatchTimer);
-    flatElementsWatchTimer = setTimeout(() => {
+
+    clearTimeout(initLinkOptionsWatchTimer);
+    initLinkOptionsWatchTimer = setTimeout(() => {
       this.initLinkOptions();
     }, 300);
   }
+
   @Watch('current')
   currentWatch () {
     clearTimeout(currentWatchTimer);
@@ -323,8 +325,6 @@ export default class LowActions extends Vue {
   }
 
   initLinkOptions () {
-    console.log('this.flatElements', this.flatElements);
-
     if (this.flatElements) {
 
       const elementActions: any = cloneDeep(this.flatElements).filter(item => item.actions && item.actions.length).map((item: any) => {

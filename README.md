@@ -98,7 +98,7 @@ models = [
     name: "表单", // 数据源名称
     key: 'model_1a52926d55f3', // 绑定的字段 该字段创建的时候生成
     // 实体
-    entitys: [
+    entities: [
       {
         key: 'username', // 绑定的字段 输入
         name: "用户名", // 实体名称 输入

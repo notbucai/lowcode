@@ -30,12 +30,11 @@ export default class DragLayout extends Vue {
   show?: boolean;
 
   changeElement (val: LowDrapElement) {
-    // this.$store.commit('page/UPDATE');
+    this.$store.dispatch('page/save');
   }
 
   created () {
   }
-
 }
 
 </script>

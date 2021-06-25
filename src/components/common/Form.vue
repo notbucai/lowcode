@@ -26,7 +26,7 @@ export default {
   computed: {
     ...mapState({
       data (state) {
-        return state.page.data
+        return state.data
       }
     }),
     model () {

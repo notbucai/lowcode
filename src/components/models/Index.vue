@@ -35,7 +35,7 @@
             </template>
             <div
               class="low-model-item"
-              v-for="entity in item.entitys"
+              v-for="entity in item.entities"
               :key="entity.key"
             >
               <pre
@@ -71,7 +71,7 @@
                   clearable
                   :props="{
                     checkStrictly: true,
-                    children: 'entitys',
+                    children: 'entities',
                     label: 'name',
                     value: 'key',
                     expandTrigger: 'hover',
@@ -122,13 +122,13 @@
         </el-form-item> -->
 
         <div
-          v-for="(entity, index) in modelForm.entitys"
+          v-for="(entity, index) in modelForm.entities"
           :key="index"
           class="model-form-entity"
         >
           <el-form-item
             label="实体名称"
-            :prop="`entitys.${index}.name`"
+            :prop="`entities.${index}.name`"
             :rules="{
               required: true,
               message: '不能为空',
@@ -142,7 +142,7 @@
           </el-form-item>
           <el-form-item
             label="实体字段"
-            :prop="`entitys.${index}.key`"
+            :prop="`entities.${index}.key`"
             :rules="{
               required: true,
               message: '不能为空',
@@ -156,7 +156,7 @@
           </el-form-item>
           <el-form-item
             label="数据类型"
-            :prop="`entitys.${index}.type`"
+            :prop="`entities.${index}.type`"
             :rules="{
               required: true,
               message: '请选择',
@@ -173,7 +173,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="默认数据" :prop="`entitys.${index}.value`">
+          <el-form-item label="默认数据" :prop="`entities.${index}.value`">
             <el-input
               v-model="entity.value"
               placeholder="请输入实体默认数据，不填则为对应类型数据"
@@ -211,7 +211,9 @@
 import { Component, Vue, Provide, Watch } from 'vue-property-decorator';
 import { Getter, State } from 'vuex-class';
 import { LowElement } from '@/types/Element';
-import { ModelType, TypeType } from '@/store/modules/page';
+import { ModelType } from '@/store/entities/Page';
+import { TypeType } from '@/store/index';
+
 import { modelConfig } from '@/components/common/index';
 import { cloneDeep } from 'lodash'
 import { generateUUID } from '@/utils';
@@ -225,7 +227,7 @@ export default class LowModel extends Vue {
   modelForm = {
     name: '',
     key: '',
-    entitys: [{
+    entities: [{
       name: '',
       value: '',
       type: 'string',
@@ -233,16 +235,16 @@ export default class LowModel extends Vue {
     }],
   };
 
-  @State('models', { namespace: 'page' })
+  @State('globalModels')
   models?: ModelType[];
 
-  @State('types', { namespace: 'page' })
+  @State('types')
   modelTypes?: TypeType[];
 
-  @State('currentId',{ namespace: 'page' })
+  @State('currentId', { namespace: 'page' })
   currentId?: string;
 
-  @Getter('current',{ namespace: 'page' })
+  @Getter('current', { namespace: 'page' })
   current?: LowElement;
 
   @Watch('currentId')
@@ -304,7 +306,7 @@ export default class LowModel extends Vue {
   }
 
   handleDeleteItemModel (data: ModelType) {
-    this.$store.commit('page/REMOVE_MODEL', data.key);
+    this.$store.commit('REMOVE_MODEL', data.key);
     this.$message.success("成功");
   }
 
@@ -313,9 +315,9 @@ export default class LowModel extends Vue {
     if (!data) return; // 表示直接打开
 
     data = cloneDeep(data);
-    const entitys = data.entitys;
+    const entities = data.entities;
 
-    data.entitys = entitys.map(item => {
+    data.entities = entities.map(item => {
       item.value = JSON.parse(item.value);
       return item;
     });
@@ -324,7 +326,7 @@ export default class LowModel extends Vue {
   }
 
   handleAddFormEntity () {
-    this.modelForm.entitys.push({
+    this.modelForm.entities.push({
       key: '',
       name: '',
       value: '',
@@ -332,7 +334,7 @@ export default class LowModel extends Vue {
     });
   }
   handleRemoveEntityItem (index: number) {
-    this.modelForm.entitys.splice(index, 1);
+    this.modelForm.entities.splice(index, 1);
   }
 
   handleCreateAndEditModelDialogClose () {
@@ -340,7 +342,7 @@ export default class LowModel extends Vue {
     this.modelForm = {
       name: '',
       key: '',
-      entitys: [{
+      entities: [{
         name: '',
         value: '',
         type: 'string',
@@ -356,7 +358,7 @@ export default class LowModel extends Vue {
       // 转换数据
       const modelTypes = this.modelTypes || [];
       const modelForm = cloneDeep(this.modelForm);
-      const entitys = modelForm.entitys;
+      const entities = modelForm.entities;
 
       if (!modelForm.key) {
         modelForm.key = generateUUID(true);
@@ -364,12 +366,12 @@ export default class LowModel extends Vue {
 
       try {
         // 得到keys,判断entitykey是否唯一
-        const keys = modelForm.entitys.map(item => item.key);
+        const keys = modelForm.entities.map(item => item.key);
         const size = new Set(keys).size;
-        if (size !== modelForm.entitys.length) {
+        if (size !== modelForm.entities.length) {
           throw new Error("实体中存在重复的实体字段，请确保字段唯一");
         }
-        modelForm.entitys = entitys.map(entity => {
+        modelForm.entities = entities.map(entity => {
           // 处理value 
           // TODO: 校验数据 还需要复杂一点
           if (!entity.value) {
@@ -395,7 +397,7 @@ export default class LowModel extends Vue {
       }
       try {
         // 执行添加模型
-        await this.$store.dispatch('page/handleEditOrAddModel', modelForm);
+        await this.$store.dispatch('handleEditOrAddModel', modelForm);
         this.$message.success("操作成功");
         this.$nextTick(() => {
           this.createAndEditModelDialog = false;

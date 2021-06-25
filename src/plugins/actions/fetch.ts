@@ -2,16 +2,16 @@
  * @Author: bucai
  * @Date: 2021-03-22 20:59:57
  * @LastEditors: bucai
- * @LastEditTime: 2021-03-25 15:57:20
+ * @LastEditTime: 2021-06-25 16:26:50
  * @Description:
  */
 import { Store } from "vuex";
 import axios from 'axios';
 import { getDataByModel, setDataByModel } from "@/utils/page";
 
-export default async (store: Store<{ page: { _actions: any, data: any } }>, handle: string, options: any = {}) => {
+export default async (store: Store<{ globalActions: any, globalData: any }>, handle: string, options: any = {}) => {
 
-  const { _actions: actions, data: modelData } = store.state.page;
+  const { globalActions: actions, globalData: modelData } = store.state;
   const [location, key] = handle.split('.');
   const [, namespace] = location.split('_')
   console.log('key', key);

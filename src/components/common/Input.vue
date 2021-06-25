@@ -27,7 +27,7 @@ export default {
     },
     ...mapState({
       data (state) {
-        return state.page.data
+        return state.globalData
       }
     })
   },

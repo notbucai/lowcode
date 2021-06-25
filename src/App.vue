@@ -103,8 +103,7 @@ Vue.use(Clipboard);
 export default class App extends Vue {
 
   private created () {
-    this.$store.commit('page/UPDATE');
-    this.$store.dispatch('page/init');
+    this.$store.dispatch('init');
     // localStorage.removeItem('preview');
     //
     tinykeys(window, {
@@ -137,8 +136,6 @@ export default class App extends Vue {
   // }
 
   get elements () {
-    console.log('elements',this.$store.state.page);
-    
     return this.$store.state.page.elements;
   }
   set elements (val) {

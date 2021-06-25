@@ -3,6 +3,13 @@
     <div class="aside-action">
       <div
         class="action-item"
+        :class="{ active: activeAction === 'page' }"
+        @click="activeAction = 'page'"
+      >
+        <span class="el-icon-document"></span>
+      </div>
+      <div
+        class="action-item"
         :class="{ active: activeAction === 'components' }"
         @click="activeAction = 'components'"
       >
@@ -22,6 +29,10 @@
       >
         <span class="el-icon-video-play"></span>
       </div>
+    </div>
+    <!-- 页面源 -->
+    <div class="aside-handle" v-if="activeAction == 'page'">
+      <low-aside-page />
     </div>
     <!-- 组件相关 -->
     <div class="aside-handle" v-if="activeAction == 'components'">
@@ -61,29 +72,31 @@
 </template>
 <script lang='ts'>
 import LowModel from '@/components/models/Index.vue'
+import LowAsidePage from '@/components/aside-page/Index.vue'
 import LowActions from '@/components/actions/Index.vue'
 import { Component, Vue, Provide } from 'vue-property-decorator';
 import { Getter, State } from 'vuex-class';
 import { LowElement } from '@/types/Element';
-import { ModelType } from '@/store/modules/page';
+import { ModelType } from '@/store/entities/Page';
 @Component({
   name: 'low-aside',
   components: {
     LowModel,
-    LowActions
+    LowActions,
+    LowAsidePage
   }
 })
 export default class LowAside extends Vue {
 
-  activeAction: 'components' | 'models' = 'components';
+  activeAction: 'components' | 'models' | 'actions' | 'page' = 'page';
 
-  @State('models', { namespace: 'page' })
+  @State('globalModels')
   models?: ModelType[];
 
-  @State('currentId',{ namespace: 'page' })
+  @State('currentId', { namespace: 'page' })
   currentId?: string;
 
-  @Getter('current',{ namespace: 'page' })
+  @Getter('current', { namespace: 'page' })
   current?: LowElement;
 
   @Provide('draggableOptions')

@@ -65,7 +65,7 @@
                 clearable
                 :props="{
                   checkStrictly: true,
-                  children: 'entitys',
+                  children: 'entities',
                   label: 'name',
                   value: 'key',
                   expandTrigger: 'hover',
@@ -89,7 +89,7 @@
                 clearable
                 :props="{
                   checkStrictly: true,
-                  children: 'entitys',
+                  children: 'entities',
                   label: 'name',
                   value: 'key',
                   expandTrigger: 'hover',
@@ -156,7 +156,7 @@ export default {
   },
   computed: {
     cascaderOptions () {
-      return this.$store.state.page.models;
+      return this.$store.state.globalModels;
     }
   },
   created () {
@@ -199,7 +199,7 @@ export default {
     },
     async handleDeleteItem (action) {
       await this.$confirm(`是否删除“${action.name}”？`);
-      this.$store.commit('page/REMOVE_ACTION', {
+      this.$store.commit('REMOVE_ACTION', {
         type: 'fetch',
         key: action.key
       });
@@ -209,7 +209,7 @@ export default {
       const currentBindData = e.reduce((pv, cv) => {
         let list = pv;
         if (!Array.isArray(pv)) {
-          list = pv.entitys;
+          list = pv.entities;
         }
         return list.find(item => item.key === cv);
       }, this.cascaderOptions);
@@ -237,7 +237,7 @@ export default {
           action.key = 'action_' + generateUUID(true);
         }
 
-        this.$store.commit('page/UPDATE_ACTION', {
+        this.$store.commit('UPDATE_ACTION', {
           type: 'fetch',
           key: action.key,
           data: action
