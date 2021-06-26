@@ -6,11 +6,17 @@
 
 ![./docs-assets/er.png](./docs-assets/er.png)
 
+
 ## 项目依赖
 
 ### Vuejs
+渐进式 JavaScript 框架
 
 ### ElementUI
+Element，一套为开发者、设计师和产品经理准备的基于 Vue 2.0 的桌面端组件库
+
+### Vue.Draggable
+基于 Sortable.js 的 Vue 拖放组件
 
 ## 元素结构
 > 使用JSON作为结构化的处理 是不是最终可以抛弃组件库的依赖 只需要做兼容性的 `代理组件`？
