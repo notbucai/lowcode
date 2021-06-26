@@ -4,6 +4,8 @@
 
 ![./docs-assets/framework.png](./docs-assets/framework.png)
 
+![./docs-assets/er.png](./docs-assets/er.png)
+
 ## 项目依赖
 
 ### Vuejs
