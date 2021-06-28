@@ -318,7 +318,8 @@ export default class LowModel extends Vue {
     const entities = data.entities;
 
     data.entities = entities.map(item => {
-      item.value = JSON.parse(item.value);
+      // item.value = JSON.parse(item.value);
+      // item.value = item.value;
       return item;
     });
 

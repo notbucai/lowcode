@@ -52,13 +52,13 @@ export default {
   },
   computed: {
     ...mapState({
-      pageData (state) {
-        return state.page.data
+      globalData (state) {
+        return state.globalData
       }
     }),
     data () {
       if (this.models && this.models.data) {
-        const mList = getDataByModel(this.pageData, this.models.data);
+        const mList = getDataByModel(this.globalData, this.models.data);
         return mList;
       }
       const list = [this.columns.reduce((pv, cv) => {

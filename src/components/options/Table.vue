@@ -87,28 +87,10 @@ export default class Table extends BaseOptions {
     }, {}), null, 2);
   }
 
-  @Watch('apiJSONData')
-  apiJSONDataWatch (newVal: string, oldVal: string) {
-    if (oldVal.length === 0) return;
-    console.log('newVal', newVal, oldVal);
+  // @Watch('apiJSONData')
+  // apiJSONDataWatch (newVal: string, oldVal: string) {
 
-    if (oldVal === newVal) return;
-
-    try {
-      const newObj = JSON.parse(newVal);
-
-      const columns: LowTableColumn[] = Object.keys(newObj).map(key => {
-        return {
-          id: key,
-          label: newObj[key]
-        }
-      });
-      this.form.columns = columns;
-    } catch (error) {
-      this.$message.error(error.message);
-    }
-
-  }
+  // }
 
   @Watch('props')
   elementWatch (newVal: Element, oldVal: Element) {
@@ -125,6 +107,21 @@ export default class Table extends BaseOptions {
     this.$store.commit('page/UPDATE_CURRENT_PROPS', { ...this.form });
   }
   onSubmit () {
+
+    try {
+      const newObj = JSON.parse(this.apiJSONData);
+
+      const columns: LowTableColumn[] = Object.keys(newObj).map(key => {
+        return {
+          id: key,
+          label: newObj[key]
+        }
+      });
+      this.form.columns = columns;
+      this.$notify.success("保存成功");
+    } catch (error) {
+      this.$message.error(error.message);
+    }
 
   }
   /**

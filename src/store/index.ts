@@ -16,6 +16,10 @@ export type TypeType = {
 
 Vue.use(Vuex);
 
+const pages = db.get('pages').value();
+const globalModels = db.get('globalModels').value();
+const globalActions = db.get('globalActions').value();
+
 const flattenElementsDeep = (element: LowElement) => {
   const arr = [element];
 
@@ -167,7 +171,7 @@ const store = new Vuex.Store<StateType>({
         return item.key == key;
       });
       state.globalActions[type].actions.splice(index, 1);
-      db.set('actions', state.globalActions).write();
+      // db.set('actions', state.globalActions).write();
     },
 
     /**
@@ -184,7 +188,7 @@ const store = new Vuex.Store<StateType>({
       } else {
         state.globalActions[type].actions.splice(index, 1, data);
       }
-      db.set('actions', state.globalActions).write();
+      // db.set('actions', state.globalActions).write();
     },
     /**
      * 清空数据
@@ -215,7 +219,7 @@ const store = new Vuex.Store<StateType>({
         return pv;
       }, {});
       state.globalData = Object.assign({}, state.globalData);
-      db.set('models', state.globalModels).write();
+      // db.set('models', state.globalModels).write();
     },
     /**
      * 更新模型
@@ -238,7 +242,7 @@ const store = new Vuex.Store<StateType>({
         return pv;
       }, {});
       state.globalData = Object.assign({}, state.globalData);
-      db.set('models', state.globalModels).write();
+      // db.set('models', state.globalModels).write();
     },
     /**
      * 删除模型
@@ -249,7 +253,7 @@ const store = new Vuex.Store<StateType>({
         return item.key === key;
       });
       state.globalModels.splice(index, 1);
-      db.set('models', state.globalModels).write();
+      // db.set('models', state.globalModels).write();
     }
   },
   actions: {
@@ -270,7 +274,7 @@ const store = new Vuex.Store<StateType>({
     },
 
     initPages (state) {
-      const pages = db.get('pages').value();
+      // const pages = db.get('pages').value();
       // INIT_PAGE
       if (pages && Object.keys(pages).length) {
         state.commit('INIT_PAGE', pages);
@@ -303,7 +307,7 @@ const store = new Vuex.Store<StateType>({
     initGlobalModels (state) {
       state.commit('CLEAR_MODELS');
 
-      const models = db.get('globalModels').value();
+      const models = globalModels;
       if (models && Object.keys(models).length) {
         models.forEach((item: ModelType) => {
           state.commit('ADD_MODEL', item);
@@ -329,7 +333,7 @@ const store = new Vuex.Store<StateType>({
 
     initGlobalActions (state) {
       // 初始化示例动作
-      const actions = db.get('globalActions').value();
+      const actions = globalActions;
       if (actions && Object.keys(actions).length) {
         Object.keys(actions).forEach((key: any) => {
           actions[key].actions.forEach((aItem: any) => {
@@ -400,6 +404,7 @@ store.subscribe(throttle((mutation, state: any) => {
     findPage.icon = currentPage.icon;
     findPage.elements = currentPage.elements;
   }
+  console.log('subscribe -> throttle -> state');
 
   db.set('pages', state.pages).write();
   db.set('globalModels', state.globalModels).write();
